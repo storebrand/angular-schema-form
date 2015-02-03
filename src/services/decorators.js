@@ -125,18 +125,19 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               return lst;
             };
 
-            scope.buttonClick = function($event, form) {
-              if (angular.isFunction(form.onClick)) {
-                form.onClick($event, form);
-              } else if (angular.isString(form.onClick)) {
-                if (sfSchema) {
-                  //evaluating in scope outside of sfSchemas isolated scope
-                  sfSchema.evalInParentScope(form.onClick, {'$event': $event, form: form});
-                } else {
-                  scope.$eval(form.onClick, {'$event': $event, form: form});
-                }
-              }
-            };
+              scope.updateModelForInputFile = function (fileSource) {
+                scope.$apply(function () {
+                  var file = {};
+                  file.fileName = fileSource.split('\\').pop();
+                  file.fileExt = file.fileName.split('.').pop();
+                  if (!scope.form.fileList) {
+                    scope.form.fileList = [];
+                  }
+                  if (file) {
+                    scope.form.fileList.push(file)
+                  };
+                });
+              };
 
             scope.updateModelForInputFile = function (fileSource) {
               scope.$apply(function () {
