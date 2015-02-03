@@ -13,7 +13,7 @@
 
     <input type="file"
            class="hidden"
-           onchange="angular.element(this).scope().updateModelForInputFile(this.value)"
+           onchange="angular.element(this).scope().updateModelForInputFile(this.value); angular.element(this).scope().form.action(this.value);"
            ng-model="$$value$$"
            name="{{form.key}}"
            id="{{form.key}}"/>

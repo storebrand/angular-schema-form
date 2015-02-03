@@ -146,7 +146,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   if (!scope.form.fileList) {
                     scope.form.fileList = [];
                   }
-                  scope.form.fileList.push(file);
+                  if (file) {
+                    scope.form.fileList.push(file)
+                  };
                 });
               };
 
