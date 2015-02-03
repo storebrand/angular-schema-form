@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stb Webmanual Form Editor</title>
+    <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/classic.css">
+    <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/classic.date.css">
+    <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/classic.time.css">
+    <link rel="stylesheet" href="../bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css">
+    <link rel="stylesheet" href="../bower_components/stb-datetimepicker/dist/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../dist/schema-form.min.css">
+    <link href="//elements.storebrand.no/storebrand.ny/0.47/css/stb-main.css" type="text/css" rel="stylesheet"/>
+</head>
+<body style="background: #efe8df;" ng-app="test" ng-controller="TestCtrl">
+<style>
+    .step-content {
+        background: #efe8df;
+    }
+</style>
+
+<div class="container">
+    <form name="ngform"  sf-model="modelData" sf-form="form" sf-schema="schema" sf-decorator-name="stb-webmanual-decorator" ng-submit="submitForm(ngform,modelData)">
+        <button type="submit"></button>
+    </form>
+</div>
+<script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/jquery-ui.js"></script>
+<script type="text/javascript" src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="../bower_components/tv4/tv4.js"></script>
+<script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+
+<script type="text/javascript" src="../bower_components/angular-ui-sortable/sortable.js"></script>
+<script type="text/javascript" src="../bower_components/objectpath/lib/ObjectPath.js"></script>
+
+<script type="text/javascript" src="../dist/schema-form.js"></script>
+<script type="text/javascript" src="../dist/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../dist/dropdown.min.js"></script>
+<script type="text/javascript" src="../dist/stb-webmanual-decorator.min.js"></script>
+<script type="text/javascript">
+    angular.module('test',['schemaForm']).controller('TestCtrl', function TestCtrl ($scope, $http){
+        var res = {};
+        res.data = {
+            "schema": {
+                "type": "object",
+                "required": false,
+                "properties": {
+                    "textarea_2218": {
+                        "type": "string"
+                    }
+                }
+            },
+            "form": [
+                {
+                    "type": "steps",
+                    "steps": [
+                        {
+                            "title": "Om skaden",
+                            "items": [
+                                {
+                                    "type": "help",
+                                    "helpvalue": "<h2>Om tapet/skaden</h2>"
+                                },
+                                {
+                                    "type": "fieldset",
+                                    "title": "Hvordan skjedde det?",
+                                    "items": [
+                                        {
+                                            "key": "textarea_2218",
+                                            "title": "textarea",
+                                            "type": "textarea",
+                                            "roes": 4
+                                        }
+                                    ]
+                                },
+                                {
+                                    'type': 'command-panel',
+                                    'commands': [
+                                        {
+                                            'title': 'delete',
+                                            'action': function() {
+                                                delete $scope.modelData['textarea_2218'];
+                                            },
+                                            'isVisible': function() {return true;}
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+        $scope.schema = res.data.schema;
+        $scope.form   = res.data.form;
+        $scope.form[0].finishIt = 'click()';
+        $scope.click = function () {
+            console.log('fasf')
+        };
+        $scope.modelData = { currentStep: 1 };
+        window.md = $scope.modelData;
+
+        $scope.submitForm = function (form, model) {
+            console.log(model);
+            $scope.$broadcast('schemaFormValidate');
+            if (form.$valid) {
+                console.log('You did it!');
+            }
+        };
+
+    });
+</script>
+</body>
+</html>
