@@ -1,5 +1,5 @@
 <div class="form-group uploader label-wrapper" ng-show="showCondition()">
-    <ul class="filetable">
+    <ul class="filetable" ng-if="$$value$$">
         <li class="file" ng-repeat="file in $$value$$">
             <span class="icon"><span class=""
                                      ng-bind="file.extension"
@@ -13,7 +13,7 @@
 
     <input type="file"
            class="hidden"
-           onchange="angular.element(this).scope().form.addFile(this.value);"
+           onchange="var self = this; angular.element(this).scope().$apply(function() {angular.element(self).scope().form.addFile(self.value);})"
            name="{{form.key}}"
            id="{{form.key}}"/>
 

@@ -215,9 +215,9 @@
                                                 };
                                                 $scope.modelData.uploader = $scope.modelData.uploader || [];
 
-                                                $scope.$apply(function(){
-                                                    $scope.modelData.uploader.push(file);
-                                                });
+//                                                $scope.$apply(function(){
+                                                $scope.modelData.uploader.push(file);
+//                                                });
                                             },
                                             "removeFile": function (index) {
                                                 $scope.modelData.uploader.splice(index, 1);
