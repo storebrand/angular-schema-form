@@ -271,18 +271,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 });
               };
 
-            scope.updateModelForInputFile = function (fileSource) {
-              scope.$apply(function () {
-                var file = {};
-                file.fileName = fileSource.split('\\').pop();
-                file.fileExt = file.fileName.split('.').pop();
-                if (!scope.form.fileList) {
-                  scope.form.fileList = [];
-                }
-                scope.form.fileList.push(file);
-              });
-            };
-
             scope.removeFileFromList = function (index) {
               scope.form.fileList.splice(index, 1);
             };

@@ -207,7 +207,21 @@
                                         {
                                             "key": "uploader",
                                             "type": "file",
-                                            "title": "Last opp"
+                                            "title": "Last opp",
+                                            "addFile": function (filePath) {
+                                                var file = {
+                                                    name:      filePath.split('\\').pop(),
+                                                    extension: filePath.split('.').pop()
+                                                };
+                                                $scope.modelData.uploader = $scope.modelData.uploader || [];
+
+                                                $scope.$apply(function(){
+                                                    $scope.modelData.uploader.push(file);
+                                                });
+                                            },
+                                            "removeFile": function (index) {
+                                                $scope.modelData.uploader.splice(index, 1);
+                                            }
                                         },
                                         {
                                             'key': 'previousDamagesCommands',
@@ -320,10 +334,11 @@
                                             }
                                         },
                                         {
+                                            "key": "fileupload",
                                             "type": "file",
-                                            "title": "Kvittering",
-                                            "downloadText": " Last opp",
-                                            "petitText": "Har du kvittering for gjenstanden eller annet bevis på kjøpet (avbetalingskontrakt, garanti e.l.)?"
+                                            "action": function (fileSource) {
+                                                console.log(fileSource);
+                                            }
                                         }
                                     ]
                                 }
