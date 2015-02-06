@@ -44,10 +44,24 @@
         res.data = {
             "schema": {
                 "type": "object",
-                "required": false,
                 "properties": {
                     "textarea_2218": {
-                        "type": "string"
+                        "type": "string",
+                        "required": true
+                    },
+                    "textarea_2228": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "select_2228": {
+                        "type": "string",
+                        "required": true,
+                        "enum": ['1', '3']
+                    },
+                    "dropdown_2228": {
+                        "type": "string",
+                        "required": true,
+                        "enum": ['1', '3']
                     }
                 }
             },
@@ -69,20 +83,58 @@
                                         {
                                             "key": "textarea_2218",
                                             "title": "textarea",
-                                            "type": "textarea",
-                                            "roes": 4
-                                        }
-                                    ]
-                                },
-                                {
-                                    'type': 'command-panel',
-                                    'commands': [
+                                            "type": "text"
+                                        },
                                         {
-                                            'title': 'delete',
-                                            'action': function() {
-                                                delete $scope.modelData['textarea_2218'];
-                                            },
-                                            'isVisible': function() {return true;}
+                                            "key": "textarea_2228",
+                                            "title": "textarea",
+                                            "type": "text"
+                                        },
+                                        {
+                                            'key': 'select_2228',
+                                            'title': 'select',
+                                            'type': 'select',
+                                            'dataType': 'string',
+                                            'titleMap': [
+                                                {'name': '_1', 'value': '1'},
+                                                {'name': '_2', 'value': '2'}
+                                            ]
+                                        },
+                                        {
+                                            'key': 'dropdown_2228',
+                                            'title': 'select',
+                                            'type': 'dropdown',
+                                            'titleMap': [
+                                                {'name': '_1', 'value': '1'},
+                                                {'name': '_2', 'value': '2'}
+                                            ]
+                                        },
+                                        {
+                                            'type': 'command-panel',
+                                            'commands': [
+                                                {
+                                                    'title': 'delete',
+                                                    'action': function () {
+                                                        delete $scope.modelData['textarea_2218'];
+                                                        delete $scope.modelData['textarea_2228'];
+                                                    },
+                                                    'isVisible': function () {
+                                                        return true;
+                                                    }
+                                                },
+                                                {
+                                                    'title': 'validate',
+                                                    'action': function () {
+                                                        $scope.$broadcast('schemaFormValidate');
+                                                        if ($scope.ngform.$invalid) {
+                                                            alert("Invalid");
+                                                        }
+                                                    },
+                                                    'isVisible': function () {
+                                                        return true;
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }

@@ -1,4 +1,4 @@
-<div class="form-group" ng-class="{'has-error': hasError(), 'has-success': hasSuccess(), 'has-feedback': form.feedback !== false}"  ng-show="showCondition()">
+<div ng-if="form.dataType === 'object'" class="form-group" ng-show="showCondition()">
     <div class="label-wrapper">
         <label ng-show="showTitle()">{{form.title}}</label>
         <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
@@ -12,19 +12,36 @@
     </span>
 
     <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
-        <select ng-if="form.dataType !== 'object'" ng-model="$$value$$"
-                ng-model-options="form.ngModelOptions"
-                sf-changed="form"
-                class="form-control"
-                schema-validate="form"
-                ng-options="item.value as item.name for item in form.titleMap">
-        </select>
-        <select ng-if="form.dataType === 'object'" ng-model="$$value$$"
+        <select ng-model="$$value$$"
               ng-model-options="form.ngModelOptions"
               sf-changed="form"
               class="form-control"
               schema-validate="form"
               ng-options="item as item.name for item in form.titleMap | orderBy: 'name' track by item.name">
+        </select>
+    </div>
+</div>
+
+<div ng-if="form.dataType !== 'object'" class="form-group" ng-show="showCondition()">
+    <div class="label-wrapper">
+        <label ng-show="showTitle()">{{form.title}}</label>
+        <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
+    </div>
+
+    <span class="help-block navn-message has-error" ng-show="!disabledElement() && hasError()">
+        <small class="help-block">
+            <span class="stb-color-sprite-small warning circle"></span>
+            <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
+        </small>
+    </span>
+
+    <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
+        <select ng-model="$$value$$"
+                ng-model-options="form.ngModelOptions"
+                sf-changed="form"
+                class="form-control"
+                schema-validate="form"
+                ng-options="item.value as item.name for item in form.titleMap">
         </select>
     </div>
 </div>
