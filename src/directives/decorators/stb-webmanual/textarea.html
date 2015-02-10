@@ -13,6 +13,8 @@
     <div class="stb-form-group al text-area has-feedback" ng-class="{'has-error': hasError(), 'has-success': hasSuccess()}">
         <span class="help-block  info-message">{{form.description}}</span>
         <textarea class="form-control"
+                  cols="40"
+                  rows="4"
                   sf-changed="form"
                   ng-model-onblur
                   ng-model="$$value$$"

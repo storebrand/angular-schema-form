@@ -10,15 +10,22 @@
             <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
         </small>
     </span>
-
-    <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
-        <select ng-model="$$value$$"
-              ng-model-options="form.ngModelOptions"
-              sf-changed="form"
-              class="form-control"
-              schema-validate="form"
-              ng-options="item as item.name for item in form.titleMap | orderBy: 'name' track by item.name">
-        </select>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
+                <div class="selectContainer">
+                    <select ng-model="$$value$$"
+                          ng-model-options="form.ngModelOptions"
+                          sf-changed="form"
+                          class="form-control"
+                          schema-validate="form"
+                          ng-options="item as item.name for item in form.titleMap | orderBy: 'name' track by item.name">
+                    </select>
+                    <i class="form-control-feedback glyphicon"
+                       ng-class="{'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError()}"></i>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -34,14 +41,21 @@
             <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
         </small>
     </span>
-
-    <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
-        <select ng-model="$$value$$"
-                ng-model-options="form.ngModelOptions"
-                sf-changed="form"
-                class="form-control"
-                schema-validate="form"
-                ng-options="item.value as item.name for item in form.titleMap">
-        </select>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="stb-form-group select" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
+                <div class="selectContainer">
+                    <select ng-model="$$value$$"
+                            ng-model-options="form.ngModelOptions"
+                            sf-changed="form"
+                            class="form-control"
+                            schema-validate="form"
+                            ng-options="item.value as item.name for item in form.titleMap">
+                    </select>
+                    <i class="form-control-feedback glyphicon"
+                       ng-class="{'glyphicon-ok': hasSuccess(), 'glyphicon-remove': hasError()}"></i>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
