@@ -6,7 +6,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="object in $$value$$" index="{{$index}}">
-                <td ng-repeat="column in form.convertToRow(object)" ng-bind="column"></td>
+                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object)" ng-bind="column"></td>
                 <td ng-repeat="action in form.actions">
                     <a ng-click="action.action($$value$$, $parent.$index)" ng-bind="action.title"></a>
                 </td>
