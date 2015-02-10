@@ -212,6 +212,12 @@ form .col-md-12 {
   display: inline-block;
   margin-right: 10px;
 }
+.has-error .form-control {
+  background-color: #fff0f0;
+}
+.stb-form-group.select {
+  display: block;
+}
 @media (max-width: 767px) {
   .notification .msgIcon {
     padding: 12px;
