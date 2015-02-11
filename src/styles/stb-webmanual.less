@@ -1,4 +1,6 @@
 @stbcolor-primary: #DA291C;
+@stbcolor-third: #819f2b;
+
 @standart-indent: 24px;
 @standart-font-size: 16px;
 @bold-font-family: "open sans bold";
@@ -50,6 +52,12 @@ label {
 
   i.form-control-feedback {
     right: inherit;
+  }
+
+  .glyphicon-calendar {
+    &:before {
+      content: '';
+    }
   }
 }
 
@@ -257,6 +265,14 @@ form {
 .has-error {
   .form-control {
     background-color: #fff0f0;
+  }
+}
+
+.has-success{
+  .datePicker {
+    .input-group-addon {
+      border-color: @stbcolor-third;
+    }
   }
 }
 
