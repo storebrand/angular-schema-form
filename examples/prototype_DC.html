@@ -144,6 +144,36 @@
                                                     }
                                                 }
                                             ]
+                                        },
+                                        {
+                                            'key': 'table_2236',
+                                            'type': 'table',
+                                            "columnTitles": ["Title_1", "Title_2", "Sum"],
+                                            'actions': [
+                                                {
+                                                    title: 'delete',
+                                                    action: function (localModel, index) {
+                                                    }
+                                                },
+                                                {
+                                                    title: 'edit',
+                                                    action: function () {
+                                                    }
+                                                }
+                                            ],
+                                            'convertToRow': function(object) {
+                                                var t = [];
+                                                object.forEach(function(el) {
+                                                    t.push(el);
+                                                });
+                                                t.push(t[0]+t[1]);
+                                                return t;
+                                            }
+                                        },
+                                        {
+                                            'key': 'table_2236_1',
+                                            'type': 'table',
+                                            "columnTitles": ["Title_1", "Title_2"]
                                         }
                                     ]
                                 }
@@ -160,6 +190,12 @@
             console.log('fasf')
         };
         $scope.modelData = { currentStep: 1 };
+        $scope.modelData['table_2236'] = [
+          [1, 2], [2, 3]
+        ];
+        $scope.modelData['table_2236_1'] = [
+            [1, 2], [2, 3]
+        ];
         window.md = $scope.modelData;
 
         $scope.submitForm = function (form, model) {
