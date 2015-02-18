@@ -1,5 +1,6 @@
 @stbcolor-primary: #DA291C;
 @stbcolor-third: #819f2b;
+@stbcolor-error: #a94442;
 
 @standart-indent: 24px;
 @standart-font-size: 16px;
@@ -265,6 +266,11 @@ form {
 .has-error {
   .form-control {
     background-color: #fff0f0;
+  }
+  .datePicker {
+    .input-group-addon {
+      background-color: @stbcolor-error;
+    }
   }
 }
 
