@@ -1,4 +1,4 @@
-<div ng-show="showCondition()">
+<div ng-show="$$value$$ && $$value$$.length && showCondition()">
     <table class="stb-table hoverable">
         <thead>
             <th ng-repeat="item in form.columnTitles">{{item}}</th>
@@ -8,7 +8,9 @@
             <tr ng-repeat="row in $$value$$" index="{{$index}}">
                 <td ng-repeat="column in row" ng-bind="column"></td>
                 <td ng-repeat="action in form.actions">
-                    <a ng-click="action.action($$value$$, $parent.$index)" ng-bind="action.title"></a>
+                    <a class="{{ action.cssClass }} "
+                       ng-click="action.action($$value$$, $parent.$index)"
+                       ng-bind="action.title"></a>
                 </td>
             </tr>
         </tbody>

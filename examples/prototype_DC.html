@@ -119,6 +119,31 @@
                                             ]
                                         },
                                         {
+                                            'key': 'whiteboxPreviousDamages',
+                                            'type': 'whitebox',
+                                            'items': [
+                                                {
+                                                    'key': 'previousDamages',
+                                                    'type': 'table',
+                                                    "columnTitles": ["Tidligere skade", "Forsikrinsselskap"],
+                                                    'actions': [
+                                                        {
+                                                            title: 'slett',//'delete',
+                                                            action: function (localModel, index) {
+//                                                                descriptionActionsFactory.deletePreviousDamage(index, 'previousDamages');
+                                                            }
+                                                        },
+                                                        {
+                                                            title: 'endre',//'edit',
+                                                            action: function () {
+//                                                                descriptionActionsFactory.editPreviousDamage();
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
                                             'type': 'command-panel',
                                             'commands': [
                                                 {
@@ -160,6 +185,9 @@
             console.log('fasf')
         };
         $scope.modelData = { currentStep: 1 };
+
+//        $scope.modelData.previousDamages = [[1,2]];
+
         window.md = $scope.modelData;
 
         $scope.submitForm = function (form, model) {
