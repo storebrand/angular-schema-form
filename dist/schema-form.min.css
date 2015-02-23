@@ -227,6 +227,9 @@ form .col-md-12 {
 .stb-form-group.select {
   display: block;
 }
+.command-panel .stb-btn {
+  margin-right: 12px;
+}
 @media (max-width: 767px) {
   .notification .msgIcon {
     padding: 12px;
