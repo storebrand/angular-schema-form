@@ -8,10 +8,11 @@
             <tr ng-repeat="row in $$value$$" index="{{$index}}">
                 <td ng-repeat="column in row" ng-bind="column"></td>
                 <td ng-repeat="action in form.actions">
-                    <span class="stb-sprite-small"
-                          ng-class="{red: 'action.cssClass === deleteLink',
-                                     remove: 'action.cssClass === deleteLink'}"></span>
-                    <a class="{{action.cssClass}}"
+                    <span ng-class="{'stb-sprite-small': action.delete || action.edit,
+                                     remove : action.delete,
+                                     red : action.delete,
+                                     edit : action.edit }"></span>
+                    <a ng-class="{ deleteLink : action.delete}"
                        ng-click="action.action($$value$$, $parent.$index)"
                        ng-bind="action.title"></a>
                 </td>
