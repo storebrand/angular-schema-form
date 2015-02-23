@@ -26,6 +26,12 @@ try {
   deps.push('ui.bootstrap');
 } catch (e) {}
 
+try {
+  //This throws an expection if module does not exist.
+  angular.module('angularFileUpload');
+  deps.push('angularFileUpload');
+} catch (e) {}
+
 angular.module('schemaForm', deps);
 
 angular.module('schemaForm').provider('sfPath',
@@ -193,8 +199,8 @@ angular.module('schemaForm').provider('schemaFormDecorators',
   };
 
   var createDirective = function(name) {
-    $compileProvider.directive(name, ['$parse', '$compile', '$http', '$templateCache', 'scrollingTop', '$timeout', '$filter',
-      function($parse,  $compile,  $http,  $templateCache, scrollingTop, $timeout, $filter) {
+    $compileProvider.directive(name, ['$parse', '$compile', '$http', '$templateCache', 'scrollingTop', '$timeout', '$filter', 'FileUploader',
+      function($parse,  $compile,  $http,  $templateCache, scrollingTop, $timeout, $filter, FileUploader) {
 
         return {
           restrict: 'AE',
@@ -518,6 +524,33 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
             };
 
+            scope.initFileUploader = function () {
+              var uploader = new FileUploader(scope.form.uploadURL);
+              uploader.autoUpload = true;
+              uploader.removeAfterUpload = true;
+              uploader.onAfterAddingFile = function(item) {
+                scope.form.onFileUploadStart(item);
+              };
+              uploader.onSuccessItem = function(item, response) {
+                response.isUploaded = true;
+                scope.form.onFileUploaded(item, response);
+              };
+
+              scope.uploader = uploader;
+
+              scope.removeFile = function(item) {
+                if (item.file) {
+                  item.cancel();
+                }
+                scope.form.removeFile(item);
+              }
+
+              scope.getExtensionFromFileName = function (fileName) {
+                var re = /(?:\.([^.]+))?$/;
+                return re.exec(fileName)[1];
+              };
+
+            }
 
           }
         };
