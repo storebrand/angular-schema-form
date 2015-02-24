@@ -1,4 +1,4 @@
-<div>
-    <div class="helpvalue" ng-bind-html="form.helpvalue" ng-show="showCondition()"></div>
+<div ng-show="showCondition()">
+    <div class="helpvalue" ng-bind-html="form.helpvalue"></div>
     <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
 </div>
