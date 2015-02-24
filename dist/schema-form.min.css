@@ -218,11 +218,17 @@ form .col-md-12 {
 .has-error .form-control {
   background-color: #fff0f0;
 }
+.has-error .datePicker .input-group-addon {
+  background-color: #a94442;
+}
 .has-success .datePicker .input-group-addon {
   border-color: #819f2b;
 }
 .stb-form-group.select {
   display: block;
+}
+.command-panel .stb-btn {
+  margin-right: 12px;
 }
 @media (max-width: 767px) {
   .notification .msgIcon {

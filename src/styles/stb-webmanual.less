@@ -1,5 +1,6 @@
 @stbcolor-primary: #DA291C;
 @stbcolor-third: #819f2b;
+@stbcolor-error: #a94442;
 
 @standart-indent: 24px;
 @standart-font-size: 16px;
@@ -266,6 +267,11 @@ form {
   .form-control {
     background-color: #fff0f0;
   }
+  .datePicker {
+    .input-group-addon {
+      background-color: @stbcolor-error;
+    }
+  }
 }
 
 .has-success{
@@ -279,6 +285,12 @@ form {
 .stb-form-group {
   &.select {
     display: block;
+  }
+}
+
+.command-panel {
+  .stb-btn {
+    margin-right: @standart-indent/2;
   }
 }
 
