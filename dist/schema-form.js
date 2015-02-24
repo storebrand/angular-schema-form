@@ -510,7 +510,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               var model = $parse(scope.keyModelName);
               var modelItems = [];
 
-              var uploader = new FileUploader(scope.form.uploadURL);
+              var uploader = new FileUploader(scope.form.uploadConfig);
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
@@ -557,18 +557,18 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   modelItems.splice(itemIndex, 1);
                 }
 
-                var idKey = scope.form.deleteURL.url.match(/\{(.+)\}/)[1];
+                var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
                 if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
-                  var url = scope.form.deleteURL.url.replace(/\{.+\}/, modelItem[idKey]);
-                  var deleteURL = {
+                  var url = scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]);
+                  var deleteConfig = {
                     url: url,
-                    method: scope.form.deleteURL.method,
-                    headers: scope.form.deleteURL.headers
+                    method: scope.form.deleteConfig.method,
+                    headers: scope.form.deleteConfig.headers
                   };
-                  if (!deleteURL.method) {
-                    deleteURL.method = 'DELETE';
+                  if (!deleteConfig.method) {
+                    deleteConfig.method = 'DELETE';
                   }
-                  $http(deleteURL);
+                  $http(deleteConfig);
                 } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
                   modelItem.uploaderFileItem.cancel();
                 }
