@@ -8,7 +8,7 @@
             <span class="filename" ng-bind="fileName"></span>
 
             <span ng-if="item.file && !item.isError && item.isUploading" class="upload-progress">uploading... {{item.progress}}%</span>
-            <span ng-if="!item.isError && item.isUploaded" class="uploaded">uploaded</span>
+            <span ng-if="!item.isError && (item.isUploaded || item.isJustAttached)" class="uploaded">uploaded</span>
             <span ng-if="item.file && item.isError" class="upload-error">error occured</span>
 
             <span class="delete" ng-click="removeFile(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>

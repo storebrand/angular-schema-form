@@ -100,7 +100,7 @@
                                     },
                                     'onFileUploaded': function(item, response) {
                                         var index = $.inArray(item, $scope.modelData['file_2046']);
-                                        response.canBeAttached = true;
+                                        response.isJustAttached = true;
                                         $scope.modelData['file_2046'][index] = response;
                                     },
                                     'removeFile': function (item) {

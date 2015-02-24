@@ -394,7 +394,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 scope.form.onFileUploadStart(item);
               };
               uploader.onSuccessItem = function(item, response) {
-                response.isUploaded = true;
+                response.isJustAttached = true;
                 scope.form.onFileUploaded(item, response);
               };
 
