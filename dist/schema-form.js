@@ -263,25 +263,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               return lst;
             };
 
-              scope.updateModelForInputFile = function (fileSource) {
-                scope.$apply(function () {
-                  var file = {};
-                  file.fileName = fileSource.split('\\').pop();
-                  file.fileExt = file.fileName.split('.').pop();
-                  if (!scope.form.fileList) {
-                    scope.form.fileList = [];
-                  }
-                  if (file) {
-                    scope.form.fileList.push(file)
-                  };
-                });
-              };
-
-            scope.removeFileFromList = function (index) {
-              scope.form.fileList.splice(index, 1);
-            };
-
-
               var lookupForKey = function (key) {
               var res = '';
 
@@ -525,29 +506,86 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             scope.initFileUploader = function () {
+
+              var model = $parse(scope.keyModelName);
+              var modelItems = [];
+
               var uploader = new FileUploader(scope.form.uploadURL);
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
-                scope.form.onFileUploadStart(item);
+                var modelItem = {
+                  status: 'inProgress',
+                  uploaderFileItem: item
+                };
+                modelItems.push(modelItem);
+                model.assign(scope, modelItems);
               };
               uploader.onSuccessItem = function(item, response) {
-                response.isJustAttached = true;
-                scope.form.onFileUploaded(item, response);
+                modelItems.some(function(modelItem) {
+                  if (modelItem.uploaderFileItem === item) {
+                    modelItem.status = 'justAttached';
+                    $.extend(modelItem, response);
+                    return true;
+                  }
+                  return false;
+                });
+              };
+              uploader.onErrorItem = function(item) {
+                modelItems.some(function(modelItem) {
+                  if (modelItem.uploaderFileItem === item) {
+                    modelItem.status = 'error';
+                    return true;
+                  }
+                  return false;
+                });
               };
 
               scope.uploader = uploader;
 
-              scope.removeFile = function(item) {
-                if (item.file) {
-                  item.cancel();
+              scope.removeFile = function(modelItem) {
+                var itemIndex;
+                modelItems.some(function(item, index) {
+                  if (modelItem === item) {
+                    itemIndex = index;
+                    return true;
+                  }
+                  return false;
+                });
+
+                if (itemIndex >= 0) {
+                  modelItems.splice(itemIndex, 1);
                 }
-                scope.form.removeFile(item);
-              }
+
+                var idKey = scope.form.deleteURL.url.match(/\{(.+)\}/)[1];
+                if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
+                  var url = scope.form.deleteURL.url.replace(/\{.+\}/, modelItem[idKey]);
+                  var deleteURL = {
+                    url: url,
+                    method: scope.form.deleteURL.method,
+                    headers: scope.form.deleteURL.headers
+                  };
+                  if (!deleteURL.method) {
+                    deleteURL.method = 'DELETE';
+                  }
+                  $http(deleteURL);
+                } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
+                  modelItem.uploaderFileItem.cancel();
+                }
+              };
 
               scope.getExtensionFromFileName = function (fileName) {
                 var re = /(?:\.([^.]+))?$/;
                 return re.exec(fileName)[1];
+              };
+
+              scope.inStatus = function(item, statuses) {
+                var flag;
+                statuses.some(function (status){
+                  flag = (item.status === status);
+                  return flag;
+                });
+                return flag;
               };
 
             }

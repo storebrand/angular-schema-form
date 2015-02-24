@@ -94,20 +94,11 @@
                                             'ClientId': 'dc-client'
                                         }
                                     },
-                                    'onFileUploadStart': function (item) {
-                                        $scope.modelData['file_2046'] = $scope.modelData['file_2046'] || [];
-                                        $scope.modelData['file_2046'].push(item);
-                                    },
-                                    'onFileUploaded': function(item, response) {
-                                        var index = $.inArray(item, $scope.modelData['file_2046']);
-                                        response.isJustAttached = true;
-                                        $scope.modelData['file_2046'][index] = response;
-                                    },
-                                    'removeFile': function (item) {
-                                        var index = $.inArray(item, $scope.modelData['file_2046']);
-                                        $scope.modelData['file_2046'].splice(index, 1);
-                                        if (!item.file) {
-                                            //remove from backend
+                                    'deleteURL': {
+                                        'url': 'http://localhost/api/open/claims/DC_fa7c162f-0f79-486d-80c6-41d064eced55/attachments/{id}',
+                                        'method': 'DELETE',
+                                        'headers': {
+                                            'ClientId': 'dc-client'
                                         }
                                     }
                                 },

@@ -1,17 +1,21 @@
 <div class="form-group uploader label-wrapper" ng-show="showCondition()" ng-init="initFileUploader()">
 
     <ul class="filetable" ng-if="$$value$$">
-        <li class="file" ng-repeat="item in $$value$$" ng-init="fileName=(item.file) ? item.file.name : item.fileName; extension=getExtensionFromFileName(fileName)">
+        <li class="file"
+            ng-repeat="item in $$value$$"
+            ng-init="fileName = inStatus(item, ['inProgress', 'error']) ? item.uploaderFileItem.file.name : item.fileName; extension=getExtensionFromFileName(fileName)">
+
             <span class="icon">
                 <span class="" ng-bind="extension" ng-class="{ 'stb-color-sprite-small': (extension === 'pdf'), pdf: (extension === 'pdf') }"></span>
             </span>
             <span class="filename" ng-bind="fileName"></span>
 
-            <span ng-if="item.file && !item.isError && item.isUploading" class="upload-progress">uploading... {{item.progress}}%</span>
-            <span ng-if="!item.isError && (item.isUploaded || item.isJustAttached)" class="uploaded">uploaded</span>
-            <span ng-if="item.file && item.isError" class="upload-error">error occured</span>
+            <span ng-if="inStatus(item, ['inProgress'])" class="upload-progress">uploading... {{item.uploaderFileItem.progress}}%</span>
+            <span ng-if="inStatus(item, ['justAttached'])" class="uploaded">uploaded</span>
+            <span ng-if="inStatus(item, ['error'])" class="upload-error">error occured</span>
 
             <span class="delete" ng-click="removeFile(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>
+
         </li>
     </ul>
 
