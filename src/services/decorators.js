@@ -378,6 +378,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.onAfterAddingFile = function(item) {
                 var modelItem = {
                   status: 'inProgress',
+                  fileName: item.file.name,
                   uploaderFileItem: item
                 };
                 modelItems.push(modelItem);
