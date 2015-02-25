@@ -11,7 +11,7 @@
                     <span ng-class="{'stb-sprite-small': action.type,
                                      remove : action.type === 'delete',
                                      red : action.type === 'delete',
-                                     edit : action.type === 'edit' }"></span>
+                                     pencil : action.type === 'edit' }"></span>
                     <a ng-class="{ deleteLink : action.type === 'delete'}"
                        ng-click="action.action($$value$$, $parent.$index)"
                        ng-bind="action.title"></a>
