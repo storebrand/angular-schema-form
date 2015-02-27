@@ -26,6 +26,12 @@ try {
   deps.push('ui.bootstrap');
 } catch (e) {}
 
+try {
+  //This throws an expection if module does not exist.
+  angular.module('angularFileUpload');
+  deps.push('angularFileUpload');
+} catch (e) {}
+
 angular.module('schemaForm', deps);
 
 angular.module('schemaForm').provider('sfPath',
@@ -193,8 +199,8 @@ angular.module('schemaForm').provider('schemaFormDecorators',
   };
 
   var createDirective = function(name) {
-    $compileProvider.directive(name, ['$parse', '$compile', '$http', '$templateCache', 'scrollingTop', '$timeout', '$filter',
-      function($parse,  $compile,  $http,  $templateCache, scrollingTop, $timeout, $filter) {
+    $compileProvider.directive(name, ['$parse', '$compile', '$http', '$templateCache', 'scrollingTop', '$timeout', '$filter', 'FileUploader',
+      function($parse,  $compile,  $http,  $templateCache, scrollingTop, $timeout, $filter, FileUploader) {
 
         return {
           restrict: 'AE',
@@ -256,25 +262,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               });
               return lst;
             };
-
-              scope.updateModelForInputFile = function (fileSource) {
-                scope.$apply(function () {
-                  var file = {};
-                  file.fileName = fileSource.split('\\').pop();
-                  file.fileExt = file.fileName.split('.').pop();
-                  if (!scope.form.fileList) {
-                    scope.form.fileList = [];
-                  }
-                  if (file) {
-                    scope.form.fileList.push(file)
-                  };
-                });
-              };
-
-            scope.removeFileFromList = function (index) {
-              scope.form.fileList.splice(index, 1);
-            };
-
 
               var lookupForKey = function (key) {
               var res = '';
@@ -518,6 +505,91 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
             };
 
+            scope.initFileUploader = function () {
+
+              var model = $parse(scope.keyModelName);
+              var modelItems = [];
+
+              var uploader = new FileUploader(scope.form.uploadConfig);
+              uploader.autoUpload = true;
+              uploader.removeAfterUpload = true;
+              uploader.onAfterAddingFile = function(item) {
+                var modelItem = {
+                  status: 'inProgress',
+                  fileName: item.file.name,
+                  uploaderFileItem: item
+                };
+                modelItems.push(modelItem);
+                model.assign(scope, modelItems);
+              };
+              uploader.onSuccessItem = function(item, response) {
+                modelItems.some(function(modelItem) {
+                  if (modelItem.uploaderFileItem === item) {
+                    modelItem.status = 'justAttached';
+                    $.extend(modelItem, response);
+                    return true;
+                  }
+                  return false;
+                });
+              };
+              uploader.onErrorItem = function(item) {
+                modelItems.some(function(modelItem) {
+                  if (modelItem.uploaderFileItem === item) {
+                    modelItem.status = 'error';
+                    return true;
+                  }
+                  return false;
+                });
+              };
+
+              scope.uploader = uploader;
+
+              scope.removeFile = function(modelItem) {
+                var itemIndex;
+                modelItems.some(function(item, index) {
+                  if (modelItem === item) {
+                    itemIndex = index;
+                    return true;
+                  }
+                  return false;
+                });
+
+                if (itemIndex >= 0) {
+                  modelItems.splice(itemIndex, 1);
+                }
+
+                var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
+                if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
+                  var url = scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]);
+                  var deleteConfig = {
+                    url: url,
+                    method: scope.form.deleteConfig.method,
+                    headers: scope.form.deleteConfig.headers
+                  };
+                  if (!deleteConfig.method) {
+                    deleteConfig.method = 'DELETE';
+                  }
+                  $http(deleteConfig);
+                } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
+                  modelItem.uploaderFileItem.cancel();
+                }
+              };
+
+              scope.getExtensionFromFileName = function (fileName) {
+                var re = /(?:\.([^.]+))?$/;
+                return re.exec(fileName)[1];
+              };
+
+              scope.inStatus = function(item, statuses) {
+                var flag;
+                statuses.some(function (status){
+                  flag = (item.status === status);
+                  return flag;
+                });
+                return flag;
+              };
+
+            }
 
           }
         };

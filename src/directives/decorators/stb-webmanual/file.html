@@ -1,21 +1,26 @@
-<div class="form-group uploader label-wrapper" ng-show="showCondition()">
+<div class="form-group uploader label-wrapper" ng-show="showCondition()" ng-init="initFileUploader()">
+
     <ul class="filetable" ng-if="$$value$$">
-        <li class="file" ng-repeat="file in $$value$$">
-            <span class="icon"><span class=""
-                                     ng-bind="file.extension"
-                                     ng-class="{ 'stb-color-sprite-small': (file.extension === 'pdf'), pdf: (file.extension === 'pdf') }">
-                </span>
+        <li class="file" ng-repeat="item in $$value$$" ng-init="fileName = item.fileName; extension=getExtensionFromFileName(fileName)">
+            <span class="icon">
+                <span class="" ng-bind="extension" ng-class="{ 'stb-color-sprite-small': (extension === 'pdf'), pdf: (extension === 'pdf') }"></span>
             </span>
-            <span class="filename" ng-bind="file.name"></span>
-            <span class="delete" ng-click="form.removeFile($index)"><span class="stb-sprite-small remove red"></span>Delete</span>
+            <span class="filename" ng-bind="fileName"></span>
+
+            <span ng-if="inStatus(item, ['inProgress'])" class="upload-progress">uploading... {{item.uploaderFileItem.progress}}%</span>
+            <span ng-if="inStatus(item, ['justAttached'])" class="uploaded">uploaded</span>
+            <span ng-if="inStatus(item, ['error'])" class="upload-error">error occured</span>
+
+            <span class="delete" ng-click="removeFile(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>
         </li>
     </ul>
 
     <input type="file"
            class="hidden"
-           onchange="var self = this; angular.element(this).scope().$apply(function() {angular.element(self).scope().form.addFile(self.value);})"
            name="{{form.key}}"
-           id="{{form.key}}"/>
+           id="{{form.key}}"
+           nv-file-select
+           uploader="uploader"/>
 
     <label for="{{form.key}}" class="link">{{form.title}}</label>
 

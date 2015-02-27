@@ -26,4 +26,10 @@ try {
   deps.push('ui.bootstrap');
 } catch (e) {}
 
+try {
+  //This throws an expection if module does not exist.
+  angular.module('angularFileUpload');
+  deps.push('angularFileUpload');
+} catch (e) {}
+
 angular.module('schemaForm', deps);

@@ -171,14 +171,29 @@ form .col-md-12 {
 }
 .uploader .filetable .file .icon,
 .uploader .filetable .file .filename,
-.uploader .filetable .file .delete {
+.uploader .filetable .file .delete,
+.uploader .filetable .file .uploaded,
+.uploader .filetable .file .upload-progress,
+.uploader .filetable .file .upload-error {
   display: table-cell;
   padding: 12px 12px 0 0;
 }
 .uploader .filetable .file .icon > span,
 .uploader .filetable .file .filename > span,
-.uploader .filetable .file .delete > span {
+.uploader .filetable .file .delete > span,
+.uploader .filetable .file .uploaded > span,
+.uploader .filetable .file .upload-progress > span,
+.uploader .filetable .file .upload-error > span {
   margin-left: 0;
+}
+.uploader .filetable .file .uploaded {
+  color: #819f2b;
+}
+.uploader .filetable .file .upload-progress {
+  color: #a6a6a6;
+}
+.uploader .filetable .file .upload-error {
+  color: #da291c;
 }
 .uploader .filetable .file .filename {
   font-family: "open sans bold";

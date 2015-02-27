@@ -1,6 +1,7 @@
 @stbcolor-primary: #DA291C;
 @stbcolor-third: #819f2b;
 @stbcolor-error: #a94442;
+@stbcolor-gray-fourth: #a6a6a6;
 
 @standart-indent: 24px;
 @standart-font-size: 16px;
@@ -221,12 +222,21 @@ form {
     .file {
       display: table-row;
       list-style: none;
-      .icon, .filename, .delete {
+      .icon, .filename, .delete, .uploaded, .upload-progress, .upload-error {
         display: table-cell;
         padding: @standart-indent/2 @standart-indent/2 0 0;
         & > span {
           margin-left: 0;
         }
+      }
+      .uploaded {
+        color: @stbcolor-third;
+      }
+      .upload-progress {
+        color: @stbcolor-gray-fourth;
+      }
+      .upload-error {
+        color: @stbcolor-primary;
       }
       .filename {
         .boldText;

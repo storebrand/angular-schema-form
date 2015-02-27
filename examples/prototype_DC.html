@@ -33,6 +33,7 @@
 
 <script type="text/javascript" src="../bower_components/angular-ui-sortable/sortable.js"></script>
 <script type="text/javascript" src="../bower_components/objectpath/lib/ObjectPath.js"></script>
+<script type="text/javascript" src="../bower_components/angular-file-upload/angular-file-upload.min.js"></script>
 
 <script type="text/javascript" src="../dist/schema-form.js"></script>
 <script type="text/javascript" src="../dist/bootstrap-datepicker.min.js"></script>
@@ -80,6 +81,26 @@
                                 {
                                     "type": "help",
                                     "helpvalue": "<h2>Om tapet/skaden</h2>"
+                                },
+                                {
+                                    'key': 'file_2046',
+                                    'type': 'file',
+                                    'title': 'ADD_FILES',
+                                    'infoMessage': 'FILE_INFO',
+                                    'uploadConfig': {
+                                        'url': 'http://localhost/api/open/claims/DC_fa7c162f-0f79-486d-80c6-41d064eced55/attachments',
+                                        'method': 'POST',
+                                        'headers': {
+                                            'ClientId': 'dc-client'
+                                        }
+                                    },
+                                    'deleteConfig': {
+                                        'url': 'http://localhost/api/open/claims/DC_fa7c162f-0f79-486d-80c6-41d064eced55/attachments/{id}',
+                                        'method': 'DELETE',
+                                        'headers': {
+                                            'ClientId': 'dc-client'
+                                        }
+                                    }
                                 },
                                 {
                                     'key': 'date_2818',

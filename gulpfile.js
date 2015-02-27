@@ -91,6 +91,7 @@ gulp.task('test', function() {
     'test/lib/angular-mocks.js',
     'bower_components/tv4/tv4.js',
     'bower_components/objectpath/lib/ObjectPath.js',
+    'bower_components/angular-file-upload/angular-file-upload.min.js',
     'src/module.js',
     'src/sfPath.js',
     'src/services/*.js',
