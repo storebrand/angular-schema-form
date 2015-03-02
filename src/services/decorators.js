@@ -369,8 +369,13 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
             scope.initFileUploader = function () {
 
-              var model = $parse(scope.keyModelName);
-              var modelItems = model(scope) || [];
+              var modelExpression = $parse(scope.keyModelName);
+              var getModel = function() {
+                if (!modelExpression(scope)) {
+                  modelExpression.assign(scope, []);
+                }
+                return modelExpression(scope);
+              };
 
               var uploader = new FileUploader(scope.form.uploadConfig);
               uploader.autoUpload = true;
@@ -381,25 +386,25 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   fileName: item.file.name,
                   uploaderFileItem: item
                 };
-                modelItems.push(modelItem);
-                model.assign(scope, modelItems);
+                getModel().push(modelItem);
+                modelExpression.assign(scope, getModel());
               };
               uploader.onSuccessItem = function(item, response) {
-                modelItems.some(function(modelItem) {
+                getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     modelItem.status = 'justAttached';
                     $.extend(modelItem, response);
-                    model.assign(scope, modelItems);
+                    modelExpression.assign(scope, getModel());
                     return true;
                   }
                   return false;
                 });
               };
               uploader.onErrorItem = function(item) {
-                modelItems.some(function(modelItem) {
+                getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     modelItem.status = 'error';
-                    model.assign(scope, modelItems);
+                    modelExpression.assign(scope, getModel());
                     return true;
                   }
                   return false;
@@ -410,7 +415,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               scope.removeFile = function(modelItem) {
                 var itemIndex;
-                modelItems.some(function(item, index) {
+                getModel().some(function(item, index) {
                   if (modelItem === item) {
                     itemIndex = index;
                     return true;
@@ -419,8 +424,8 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 });
 
                 if (itemIndex >= 0) {
-                  modelItems.splice(itemIndex, 1);
-                  model.assign(scope, modelItems);
+                  getModel().splice(itemIndex, 1);
+                  modelExpression.assign(scope, getModel());
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
