@@ -508,7 +508,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             scope.initFileUploader = function () {
 
               var model = $parse(scope.keyModelName);
-              var modelItems = [];
+              var modelItems = model(scope) || [];
 
               var uploader = new FileUploader(scope.form.uploadConfig);
               uploader.autoUpload = true;
@@ -527,6 +527,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   if (modelItem.uploaderFileItem === item) {
                     modelItem.status = 'justAttached';
                     $.extend(modelItem, response);
+                    model.assign(scope, modelItems);
                     return true;
                   }
                   return false;
@@ -536,6 +537,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 modelItems.some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     modelItem.status = 'error';
+                    model.assign(scope, modelItems);
                     return true;
                   }
                   return false;
@@ -556,19 +558,16 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
                 if (itemIndex >= 0) {
                   modelItems.splice(itemIndex, 1);
+                  model.assign(scope, modelItems);
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
                 if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
-                  var url = scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]);
                   var deleteConfig = {
-                    url: url,
-                    method: scope.form.deleteConfig.method,
+                    url: scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]),
+                    method: scope.form.deleteConfig.method || 'DELETE',
                     headers: scope.form.deleteConfig.headers
                   };
-                  if (!deleteConfig.method) {
-                    deleteConfig.method = 'DELETE';
-                  }
                   $http(deleteConfig);
                 } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
                   modelItem.uploaderFileItem.cancel();
