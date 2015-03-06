@@ -13,6 +13,10 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
 
       elm.unbind('input').unbind('keydown').unbind('change');
       elm.bind('blur', function() {
+
+        // TODO: remove it after debug
+        console.log(attr.ngModel + ': elm.bind("blur") fired!!!');
+
         scope.$apply(function() {
           if (!/[^\s]/.test(elm.val()) && ngModelCtrl.$pristine) {
           } else {

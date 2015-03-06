@@ -16,6 +16,10 @@ angular.module('schemaForm').directive('sfChanged', function() {
       //waits for it. But best be sure.
       if (form && form.onChange) {
         ctrl.$viewChangeListeners.push(function() {
+
+          // TODO: remove it after debug
+          console.log(attr.ngModel + ': elm.bind("blur") fired!!!');
+
           if (angular.isFunction(form.onChange)) {
             form.onChange(ctrl.$modelValue, form);
           } else {
