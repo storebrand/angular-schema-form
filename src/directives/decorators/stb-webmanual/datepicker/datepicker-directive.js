@@ -1,4 +1,6 @@
 angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($timeout) {
+  'use strict';
+
   return {
     restrict: 'A',
     require : 'ngModel',
@@ -12,14 +14,13 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       var today = moment();
       var difference =  scope.$eval(attrs.monthlyDifference);
 
-
       $(element).parent().datetimepicker({
         pickTime: false,
         language: 'nn',
-        format: "DD.MM.YY",
+        format: 'DD.MM.YY',
         minDate: scope.$eval(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate(),
         maxDate: scope.$eval(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate()
-    }).on('dp.change', function (e) {
+      }).on('dp.change', function (e) {
         scope.$apply(function () {
           ngModelCtrl.$setViewValue(moment(e.date).format('YYYY-MM-DD'));
         });
@@ -29,9 +30,14 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         });
       });
 
-      $timeout(function () {
-        $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YY"));
-      }, 0);
+
+      scope.$watch(scope.keyModelName, function() {
+        if (ngModelCtrl.$viewValue){
+          $timeout(function() {
+            $(element).parent().data('DateTimePicker').setDate(moment(ngModelCtrl.$viewValue).format('DD.MM.YY'));
+          });
+        }
+      });
 
     }
   };
