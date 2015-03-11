@@ -1818,8 +1818,6 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
         scope.ngModel = ngModel;
       }
 
-      // TODO: ------------------------------------------------------------------------------------------------
-
       var getForm = function () {
         if (!form) {
           form = scope.$eval(attrs.schemaValidate);
@@ -1885,6 +1883,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       scope.$on('schemaFormValidate', function (event, args) {
 
         var modelKeys = args && args.modelKeys;
+        var modelKeysValidationResult = args && args.modelKeysValidationResult;
 
         if (modelKeys && !modelKeys.indexOf) {
           throw '"modelKeys" property of arguments passed should be an array';
@@ -1892,8 +1891,17 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
 
         if (isNeedToValidate(form.key[0], modelKeys)) {
 
+          if (!modelKeysValidationResult) {
+            throw '"modelKeysValidationResult" property of arguments passed should be defined';
+          }
+
           if (ngModel.$validate) {
             ngModel.$validate();
+
+            modelKeysValidationResult[form.key[0]] = {
+              isValid: ngModel.$valid
+            };
+
             if (ngModel.$invalid) { // The field must be made dirty so the error message is displayed
               ngModel.$dirty = true;
               ngModel.$pristine = false;
@@ -1919,8 +1927,6 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       scope.schemaError = function () {
         return error;
       };
-
-      // TODO: ------------------------------------------------------------------------------------------------
 
     }
   };
