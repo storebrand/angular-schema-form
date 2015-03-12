@@ -75,7 +75,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       var isNeedToValidate = function (currentKey, keysToValidate) {
         var result = true;
 
-        if (keysToValidate.indexOf(currentKey) < 0) {
+        if (keysToValidate && keysToValidate.indexOf(currentKey) < 0) {
           result = false;
         }
 
@@ -94,7 +94,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
 
         if (isNeedToValidate(form.key[0], modelKeys)) {
 
-          if (!modelKeysValidationResult) {
+          if (modelKeys && !modelKeysValidationResult) {
             throw '"modelKeysValidationResult" property of arguments passed should be defined';
           }
 
