@@ -13,10 +13,36 @@
                                      red : action.type === 'delete',
                                      pencil : action.type === 'edit' }"></span>
                     <a ng-class="{ deleteLink : action.type === 'delete'}"
+                       ng-attr-data-toggle="{{ action.type === 'delete' ? 'modal' : ''}}"
+                       ng-attr-data-target="{{ action.type === 'delete' ? '#modal123' : ''}}"
                        ng-click="action.action($$value$$, $parent.$index)"
                        ng-bind="action.title"></a>
                 </td>
             </tr>
         </tbody>
     </table>
+
+
+
+
+
 </div>
+
+<!-- Error modal: -->
+<div class="modal stb-modal fade" id="modal123" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header stbcolor-primary first lighter">
+                <a class="pull-right closeLink"  data-dismiss="modal" href="#">
+                    <p>Lukk <span class="stb-sprite-small remove"></span></p>
+                </a>
+                <h4 class="modal-title"><span class="stb-color-sprite-medium warning"></span></h4>
+            </div>
+            <div class="modal-body">
+                <h3>Dette er en advarsel</h3>
+                <button class="stb-btn alarm" data-dismiss="modal"> Bekreft</button>
+            </div>
+        </div>
+    </div>
+</div>
+
