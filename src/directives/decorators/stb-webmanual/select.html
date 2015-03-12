@@ -1,6 +1,6 @@
 <div ng-if="form.dataType === 'object'" class="form-group" ng-show="showCondition()">
     <div class="label-wrapper">
-        <label ng-show="showTitle()">{{form.title}}</label>
+        <label ng-show="showTitle()">{{form.title}}<span class="sub">{{form.subtitle}}</span></label>
         <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
     </div>
 
@@ -31,7 +31,7 @@
 
 <div ng-if="form.dataType !== 'object'" class="form-group" ng-show="showCondition()">
     <div class="label-wrapper">
-        <label ng-show="showTitle()">{{form.title}}</label>
+        <label ng-show="showTitle()">{{form.title}}<span class="sub">{{form.subtitle}}</span></label>
         <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
     </div>
 
