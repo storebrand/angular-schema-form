@@ -38,7 +38,7 @@ label.empty-view {
   background-color: white;
 }
 .input-group.datePicker i.form-control-feedback {
-  right: inherit;
+  right: -40px;
 }
 .input-group.datePicker .glyphicon-calendar:before {
   content: '';
@@ -259,4 +259,11 @@ form .col-md-12 {
     min-height: 48px;
     padding: 12px 12px 12px 60px;
   }
+}
+.select.timepicker {
+  width: 105px;
+  margin-left: 10px;
+}
+.select.timepicker select {
+  padding-right: 15px;
 }
