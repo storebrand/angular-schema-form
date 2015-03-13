@@ -13,23 +13,29 @@
             </small>
         </span>
 
-
         <div class="stb-form-group al dateContainer" ng-class="{'has-error': !disabledElement() && hasError(),
                     'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(),
                     'has-feedback': form.feedback !== false }">
-            <div class='input-group date datePicker' data-date-format="DD/MM/YYYY">
+            <div
+              stb-datepicker
+              ng-model="$$value$$"
+              schema-validate="form"
+              class='input-group date datePicker'
+              show-time="{{form.showTime}}"
+              min-date="form.minDate"
+              max-date="form.maxDate"
+              disable-until-today="form.disableUntilToday"
+              monthly-difference="form.monthlyDifference"
+              data-date-format="DD/MM/YYYY">
                 <input ng-show="form.key"
                        type="text"
-                       class="form-control"
-                       schema-validate="form"
-                       ng-model="$$value$$"
-                       stb-datepicker
-                       min-date="form.minDate"
-                       max-date="form.maxDate"
-                       disable-until-today="form.disableUntilToday"
-                       monthly-difference="form.monthlyDifference">
+                       class="form-control" />
                 <span class="input-group-addon stbcolor-secondary third">
-                    <span class="stb-sprite-small white calendar"></span></span>
+                    <span class="stb-sprite-small white calendar"></span>
+                </span>
+                <div ng-show="form.showTime" class="stb-form-group select timepicker">
+                  <select class="form-control"></select>
+                </div>
                 <i class="form-control-feedback glyphicon"
                    ng-show="hasSuccess() || hasError()"
                    ng-class="{'glyphicon-remove': !disabledElement() && hasError(),

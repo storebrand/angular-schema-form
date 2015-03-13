@@ -11,33 +11,83 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       if (!$.fn.datetimepicker) {
         return;
       }
+
       var today = moment();
       var difference =  scope.$eval(attrs.monthlyDifference);
 
-      $(element).parent().datetimepicker({
+      var $date = $(element).find('input');
+      var $time = $(element).find('select');
+
+      var showTime = Boolean(attrs.showTime);
+
+      $(element).datetimepicker({
         pickTime: false,
         language: 'nn',
         format: 'DD.MM.YY',
         minDate: scope.$eval(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate(),
         maxDate: scope.$eval(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate()
-      }).on('dp.change', function (e) {
+      }).on('dp.change', function () {
         scope.$apply(function () {
-          ngModelCtrl.$setViewValue(moment(e.date).format('YYYY-MM-DD'));
+          ngModelCtrl.$setViewValue(getModelDateTime());
         });
-      }).on('dp.error', function (e) {
+      }).on('dp.error', function () {
         scope.$apply(function () {
           ngModelCtrl.$setViewValue(undefined);
         });
       });
 
-
       scope.$watch(scope.keyModelName, function() {
         if (ngModelCtrl.$viewValue){
+          /* --- set initial values for date and time --- */
           $timeout(function() {
-            $(element).parent().data('DateTimePicker').setDate(moment(ngModelCtrl.$viewValue).format('DD.MM.YY'));
+            $time.val(getViewTime());
+            $(element).data('DateTimePicker').setDate(getViewDate());
           });
         }
       });
+
+      if (showTime){
+        var HH = 24;
+
+        for (var h=0; h < HH; h++){
+          $time.append(
+            '<option>'+formatTime(h+':00')+'</option>'+
+            '<option>'+formatTime(h+':30')+'</option>'
+          );
+        }
+
+        $time.change(function() {
+          scope.$apply(function () {
+            ngModelCtrl.$setViewValue(getModelDateTime());
+         });
+        });
+      }
+
+      /* --- function is used to set model's viewValue --- */
+      function getModelDateTime(){
+        var date = $date.val();
+        var time = $time.val();
+
+        return toIsoFormat(date, time);
+      }
+
+      /* --- helper functions --- */
+      function toIsoFormat(date, time){
+        return moment(date, 'DD.MM.YY').format('YYYY-MM-DD')+(showTime ? ('T'+moment(time, 'HH:mm').format('HH:mm:ss')) : '');
+      }
+
+      function formatTime(time){
+        return (time || '').replace(/^(\d{1}):/, '0$1:');
+      }
+
+      /* --- functions for initial val setting --- */
+      function getViewTime(){
+        return moment(ngModelCtrl.$viewValue).format('HH:mm');
+      }
+
+      function getViewDate(){
+        return moment(ngModelCtrl.$viewValue).format('DD.MM.YY');
+      }
 
     }
   };
