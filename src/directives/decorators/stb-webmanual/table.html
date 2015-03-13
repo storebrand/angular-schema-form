@@ -2,12 +2,14 @@
     <table class="stb-table hoverable">
         <thead>
             <th ng-repeat="item in form.columnTitles">{{item}}</th>
-            <th ng-repeat="action in form.actions"></th>
+            <th ng-repeat="action in form.actions" class="action-col"></th>
         </thead>
         <tbody>
             <tr ng-repeat="object in $$value$$" index="{{$index}}">
-                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object)" ng-bind="column"></td>
-                <td ng-repeat="action in form.actions">
+                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object)">
+                    <div ng-bind="column" class="stb-table-td-container"></div>
+                </td>
+                <td ng-repeat="action in form.actions" class="action-col">
                     <span ng-class="{'stb-sprite-small': action.type,
                                      remove : action.type === 'delete',
                                      red : action.type === 'delete',
