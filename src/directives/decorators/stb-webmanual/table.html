@@ -1,4 +1,4 @@
-<div ng-show="$$value$$ && $$value$$.length && showCondition()">
+<div ng-show="$$value$$ && $$value$$.length && showCondition()" ng-init="deleteRow = {index: 0}; deleteAction = _.findWhere(form.actions, {'type': 'delete'})">
     <table class="stb-table hoverable">
         <thead>
             <th ng-repeat="item in form.columnTitles">{{item}}</th>
@@ -14,22 +14,17 @@
                                      pencil : action.type === 'edit' }"></span>
                     <a ng-class="{ deleteLink : action.type === 'delete'}"
                        ng-attr-data-toggle="{{ action.type === 'delete' ? 'modal' : ''}}"
-                       ng-attr-data-target="{{ action.type === 'delete' ? '#modal123' : ''}}"
-                       ng-click="action.action($$value$$, $parent.$index)"
+                       ng-attr-data-target="{{ action.type === 'delete' ? '#modalDeleteDlg' : ''}}"
+                       ng-click="action.type === 'delete' ? deleteRow.index = $parent.$index : action.action($$value$$, $parent.$index)"
                        ng-bind="action.title"></a>
                 </td>
             </tr>
         </tbody>
     </table>
-
-
-
-
-
 </div>
 
 <!-- Error modal: -->
-<div class="modal stb-modal fade" id="modal123" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal stb-modal fade" id="modalDeleteDlg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header stbcolor-primary first lighter">
@@ -40,7 +35,13 @@
             </div>
             <div class="modal-body">
                 <h3>Dette er en advarsel</h3>
-                <button class="stb-btn alarm" data-dismiss="modal"> Bekreft</button>
+                <button
+                    class="stb-btn alarm"
+                    ng-click="(form.actions | filter:'delete')[0].action($$value$$, deleteRow.index)"
+                    data-dismiss="modal"> Bekreft</button>
+                <button
+                    class="stb-btn transparent light"
+                    data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
