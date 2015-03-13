@@ -72,10 +72,10 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
         });
       }
 
-      var isNeedToValidate = function (currentKey, keysToValidate) {
+      var isNeedToProcessValidationActions = function (currentKey, keysToBeProcessed) {
         var result = true;
 
-        if (keysToValidate && keysToValidate.indexOf(currentKey) < 0) {
+        if (keysToBeProcessed && keysToBeProcessed.indexOf(currentKey) < 0) {
           result = false;
         }
 
@@ -92,7 +92,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
           throw '"modelKeys" property of arguments passed should be an array';
         }
 
-        if (isNeedToValidate(form.key[0], modelKeys)) {
+        if (isNeedToProcessValidationActions(form.key[0], modelKeys)) {
 
           if (modelKeys && !modelKeysValidationResult) {
             throw '"modelKeysValidationResult" property of arguments passed should be defined';
@@ -116,6 +116,20 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
 
       });
 
+      scope.$on('schemaFormValidationClean', function (event, args) {
+
+        var modelKeys = args && args.modelKeys;
+
+        if (modelKeys && !modelKeys.indexOf) {
+          throw '"modelKeys" property of arguments passed should be an array';
+        }
+
+        if (isNeedToProcessValidationActions(form.key[0], modelKeys)) {
+          ngModel.$dirty = false;
+          ngModel.$pristine = true;
+        }
+
+      });
 
       //This works since we now we're inside a decorator and that this is the decorators scope.
       //If $pristine and empty don't show success (even if it's valid)
