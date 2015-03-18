@@ -465,12 +465,14 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             }
 
             scope.confirmOnClick = function(index){
+              var delEvents = (scope.form.confirmDelete || {}).events || {};
               var action = this.action;
-              var modelKey = ((/\'(.*)\'/).exec(scope.keyModelName) || []).pop();
-              var modelData = scope.model[modelKey];
+
+              /* who cares if cb doesn't need it */
+              var modelData = [];
 
               if ( action.type === 'delete' && scope.form.confirmDelete ) {
-                scope.params.submit = angular.bind({}, scope.params.submit, modelData, index);
+                scope.params.submit = angular.bind({}, delEvents.submit, modelData, index);
               } else {
                 action.action(modelData, index);
               }
