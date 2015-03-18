@@ -593,6 +593,25 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 return flag;
               };
 
+              scope.confirmOnFileRemove = function(item){
+                if (scope.form.confirmDelete){
+                  scope.params.submit = angular.bind({}, scope.removeFile, item);
+                } else {
+                  scope.removeFile(item);
+                }
+              }
+            }
+
+            scope.confirmOnClick = function(index){
+              var action = this.action;
+              var modelKey = ((/\'(.*)\'/).exec(scope.keyModelName) || []).pop();
+              var modelData = scope.model[modelKey];
+
+              if ( action.type === 'delete' && scope.form.confirmDelete ) {
+                scope.params.submit = angular.bind({}, scope.params.submit, modelData, index);
+              } else {
+                action.action(modelData, index);
+              }
             }
 
           }
