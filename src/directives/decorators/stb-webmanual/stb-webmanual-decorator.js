@@ -16,7 +16,6 @@ angular.module('schemaForm').config(['schemaFormDecoratorsProvider', function(de
     number: base + 'default.html',
     password: base + 'default.html',
     submit: base + 'submit.html',
-    button: base + 'submit.html',
     radios: base + 'radios.html',
     'radios-inline': base + 'radios-inline.html',
     radiobuttons: base + 'radio-buttons.html',
@@ -33,6 +32,7 @@ angular.module('schemaForm').config(['schemaFormDecoratorsProvider', function(de
     button: base + 'button.html',
     table: base + 'table.html',
     'command-panel': base + 'command-panel.html',
+    'modalDialog': base + 'modal-dialog.html',
     whitebox: base + 'white-box.html'
   }, [
     function(form) {
@@ -51,7 +51,6 @@ angular.module('schemaForm').config(['schemaFormDecoratorsProvider', function(de
     condition: base + 'condition.html',
     number: base + 'default.html',
     submit: base + 'submit.html',
-    button: base + 'submit.html',
     text: base + 'default.html',
     date: base + 'default.html',
     password: base + 'default.html',
@@ -64,6 +63,7 @@ angular.module('schemaForm').config(['schemaFormDecoratorsProvider', function(de
     button: base + 'button.html',
     table: base + 'table.html',
     'command-panel': base + 'command-panel.html',
+    'modalDialog': base + 'modal-dialog.html',
     whitebox: base + 'white-box.html',
     steps: base + 'steps.html',
     file: base + 'file.html'

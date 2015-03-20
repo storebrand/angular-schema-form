@@ -1,4 +1,6 @@
-<div ng-show="$$value$$ && $$value$$.length && showCondition()">
+<div  ng-show="$$value$$ && $$value$$.length && showCondition()"
+      ng-init="params = {id: form.key+'ModalDlg', submit: form.confirmDelete.events.submit, texts: form.confirmDelete.texts}">
+
     <table class="stb-table hoverable">
         <thead>
             <th ng-repeat="item in form.columnTitles">{{item}}</th>
@@ -15,10 +17,18 @@
                                      red : action.type === 'delete',
                                      pencil : action.type === 'edit' }"></span>
                     <a ng-class="{ deleteLink : action.type === 'delete'}"
-                       ng-click="action.action($$value$$, $parent.$index)"
+                       ng-attr-data-toggle="{{ action.type === 'delete' ? 'modal' : ''}}"
+                       ng-attr-data-target="{{ action.type === 'delete' ? ('#'+params.id) : ''}}"
+                       ng-click="confirmOnClick($parent.$index)"
                        ng-bind="action.title"></a>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<span ng-show="!!form.confirmDelete">
+  <div sf-modal-dialog
+       params="params">
+  </div>
+</span>
