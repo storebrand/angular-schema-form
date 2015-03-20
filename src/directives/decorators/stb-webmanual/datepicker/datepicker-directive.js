@@ -18,6 +18,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       var $date = $(element).find('input');
       var $time = $(element).find('select');
 
+      var defaultTime = attrs.defaultTime || '12:00';
+      var defaultDate = attrs.defaultDate || moment();
       var showTime = Boolean(attrs.showTime);
 
       $(element).datetimepicker({
@@ -37,13 +39,11 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       });
 
       scope.$watch(scope.keyModelName, function() {
-        if (ngModelCtrl.$viewValue){
           /* --- set initial values for date and time --- */
           $timeout(function() {
-            $time.val(getViewTime());
-            $(element).data('DateTimePicker').setDate(getViewDate());
+            $time.val(ngModelCtrl.$viewValue ? getViewTime() : defaultTime);
+            $(element).data('DateTimePicker').setDate(ngModelCtrl.$viewValue ? getViewDate() : defaultDate);
           });
-        }
       });
 
       if (showTime){
