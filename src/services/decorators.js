@@ -213,8 +213,20 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 var model = $parse(scope.keyModelName);
                 model.assign(scope, !checked);
                 scope.$apply();
+
+                var events = scope.form.events || {};
+                if ( events.change ) {
+                  events.change(!checked);
+                }
               }, 0);
             };
+
+            scope.radiosChange = function(item){
+              var events = scope.form.events || {};
+              if ( events.change ) {
+                events.change(item);
+              }
+            }
 
             scope.disabledElement = function () {
               var expressionString = scope.form.disableExpression;

@@ -16,7 +16,7 @@
 
     <div class="stb-form-group radios" ng-repeat="item in form.titleMap">
             <input type="radio"
-
+                   ng-change="radiosChange(item)"
                    sf-changed="form"
                    schema-validate="form"
                    ng-model="$$value$$"

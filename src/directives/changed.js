@@ -16,6 +16,7 @@ angular.module('schemaForm').directive('sfChanged', function() {
       //waits for it. But best be sure.
       if (form && form.onChange) {
         ctrl.$viewChangeListeners.push(function() {
+
           if (angular.isFunction(form.onChange)) {
             form.onChange(ctrl.$modelValue, form);
           } else {

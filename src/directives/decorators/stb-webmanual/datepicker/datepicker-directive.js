@@ -4,7 +4,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
   return {
     restrict: 'A',
     require : 'ngModel',
-    priority: 1, // needed for angular 1.2.x
+    priority: 0, // needed for angular 1.2.x
     link : function (scope, element, attrs, ngModelCtrl) {
       element.unbind('input').unbind('keydown').unbind('change');
 
@@ -37,6 +37,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
           ngModelCtrl.$setViewValue(undefined);
         });
       });
+
 
       scope.$watch(scope.keyModelName, function() {
           /* --- set initial values for date and time --- */
