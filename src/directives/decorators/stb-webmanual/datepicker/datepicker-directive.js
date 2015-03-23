@@ -32,9 +32,11 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       var maxTime = roundTime(maxDate);
 
       var showTime = Boolean(attrs.showTime);
-      var defaultDate = attrs.defaultDate || today;
 
+      var defaultDate = attrs.defaultDate || today;
       var defaultTime = attrs.defaultTime || (maxDate && maxDate.diff(moment(defaultDate)) === 0 && maxTime<noon ? maxTime : noon);
+
+      scope.timeOptions = [];
 
       $(element).datetimepicker({
         pickTime: false,
@@ -45,18 +47,14 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       }).on('dp.change', function () {
         scope.$apply(function () {
           var modelDateTime = getModelDateTime();
-console.log('modelDateTime',modelDateTime);
+
           if (showTime && maxDate){
             var isMaxDateSelected = maxDate.diff(modelDateTime, 'days') === 0;
-console.log('isMaxDateSelected',isMaxDateSelected);
-            if (isMaxDateSelected && $time.val()>maxTime ){
-              $time.val(defaultTime);
+            if (isMaxDateSelected && scope.selectedTime>maxTime ){
+              scope.selectedTime = defaultTime;
               modelDateTime = getModelDateTime();
             }
-
-            setTimepickerOptions( isMaxDateSelected && maxTime, true);
           }
-
           ngModelCtrl.$setViewValue(modelDateTime);
         });
       }).on('dp.error', function () {
@@ -67,29 +65,25 @@ console.log('isMaxDateSelected',isMaxDateSelected);
 
       scope.$watch(scope.keyModelName, function() {
         $timeout(function() {
-          console.log('$watch', getViewTime(), defaultTime, ngModelCtrl.$viewValue ? getViewTime() : defaultTime);
-          $time.val(ngModelCtrl.$viewValue ? getViewTime() : defaultTime);
-          $(element).data('DateTimePicker').setDate(ngModelCtrl.$viewValue ? getViewDate() : defaultDate);
+          var isMaxDateSelected = maxDate.diff(ngModelCtrl.$viewValue, 'days') === 0;
+          setTimepickerRestrictions(showTime && isMaxDateSelected && maxTime);
+
+          scope.selectedTime = getViewTime();
+          scope.selectedDate = getViewDate();
         });
       });
 
       if (showTime){
-        setTimepickerOptions(maxTime);
-
-        $time.change(function() {
-          scope.$apply(function () {
-            ngModelCtrl.$setViewValue(getModelDateTime());
-         });
-        });
+        initTimepicker();
+        scope.selectedTimeChanged = function(){
+          ngModelCtrl.$setViewValue(getModelDateTime());
+        };
       }
 
       /* --- function is used to set model's viewValue --- */
       function getModelDateTime(){
         var date = $date.val();
-        var time = $time.val();
-console.log('-getModelDateTime-');
-console.log(date, time)
-        return toIsoFormat(date, time);
+        return toIsoFormat(date, scope.selectedTime);
       }
 
       /* --- helper functions --- */
@@ -110,42 +104,33 @@ console.log(date, time)
 
         return time
                 .subtract('minutes', remainder)
-                .add('minutes', remainder > roundInterval/2 ? roundInterval : 0)
                 .format('HH:mm');
       }
 
       /* --- functions for initial val setting --- */
       function getViewTime(){
-        return moment(ngModelCtrl.$viewValue).format('HH:mm');
+        return ngModelCtrl.$viewValue ? moment(ngModelCtrl.$viewValue).format('HH:mm') : defaultTime;
       }
 
       function getViewDate(){
-        return moment(ngModelCtrl.$viewValue).format('DD.MM.YY');
+        return moment(ngModelCtrl.$viewValue || defaultDate).format('DD.MM.YY');
       }
 
-      function setTimepickerOptions(maxTimeOption, isUpdate){
-        var timeValue, isDisabled;
-
-        if (isUpdate){
-          $time.find('option').each(function(index, el){
-            var $el = $(el);
-            timeValue = $el.text();
-            isDisabled = maxTimeOption && timeValue > maxTimeOption;
-            $(el).attr('disabled', isDisabled);
-          });
-
-        } else {
-          for (var h=0; h<HH; h++){
-            [':00', ':30'].forEach(function(mins){
-              timeValue = formatTime(h + mins);
-              isDisabled = maxTimeOption && timeValue > maxTimeOption;
-              $time.append(
-                '<option ' + (isDisabled ? 'disabled' : '') + '>'+timeValue+'</option>'
-              );
+      function initTimepicker(){
+        for (var h=0; h<HH; h++){
+          [':00', ':30'].forEach(function(mins){
+            scope.timeOptions.push({
+              value: formatTime(h + mins),
+              isDisabled: false
             });
-          }
+          });
         }
+      }
 
+      function setTimepickerRestrictions(maxTimeOption){
+        scope.timeOptions.forEach(function(timeOption){
+          timeOption.isDisabled = maxTimeOption && timeOption.value > maxTimeOption;
+        });
       }
 
     }
