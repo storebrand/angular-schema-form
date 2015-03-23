@@ -1622,9 +1622,6 @@ angular.module('schemaForm').directive('sfChanged', function() {
       if (form && form.onChange) {
         ctrl.$viewChangeListeners.push(function() {
 
-          // TODO: remove it after debug
-          console.log(attr.ngModel + ': elm.bind("blur") fired!!!');
-
           if (angular.isFunction(form.onChange)) {
             form.onChange(ctrl.$modelValue, form);
           } else {
@@ -1666,9 +1663,6 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
 
       elm.unbind('input').unbind('keydown').unbind('change');
       elm.bind('blur', function() {
-
-        // TODO: remove it after debug
-        console.log(attr.ngModel + ': elm.bind("blur") fired!!!');
 
         scope.$apply(function() {
           if (!/[^\s]/.test(elm.val()) && ngModelCtrl.$pristine) {
