@@ -22,12 +22,13 @@
               schema-validate="form"
               class='input-group date datePicker'
               show-time="{{form.showTime}}"
-              min-date="form.minDate"
-              max-date="form.maxDate"
+              min-date="{{form.minDate}}"
+              max-date="{{form.maxDate}}"
               disable-until-today="form.disableUntilToday"
               monthly-difference="form.monthlyDifference"
               data-date-format="DD/MM/YYYY">
                 <input ng-show="form.key"
+                       ng-model="selectedDate"
                        placeholder="{{form.placeholder}}"
                        type="text"
                        class="form-control" />
@@ -35,7 +36,15 @@
                     <span class="stb-sprite-small white calendar"></span>
                 </span>
                 <div ng-show="form.showTime" class="stb-form-group select timepicker">
-                  <select class="form-control"></select>
+                  <select class="form-control"
+                          ng-change="selectedTimeChanged()"
+                          ng-model="selectedTime">
+                    <option ng-repeat="timeOption in timeOptions"
+                            id="{{timeOption.value}}"
+                            ng-disabled="!!timeOption.isDisabled">
+                      {{timeOption.value}}
+                    </option>
+                  </select>
                 </div>
                 <i class="form-control-feedback glyphicon"
                    ng-show="hasSuccess() || hasError()"

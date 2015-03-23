@@ -12,25 +12,50 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         return;
       }
 
+      var HH = 24;
+      var noon = '12:00';
       var today = moment();
-      var difference =  scope.$eval(attrs.monthlyDifference);
+      var tomorrow = moment().add(1, 'day');
+
+      var reservedDates = {
+        today: today,
+        tomorrow: tomorrow
+      };
 
       var $date = $(element).find('input');
       var $time = $(element).find('select');
 
-      var defaultTime = attrs.defaultTime || '12:00';
-      var defaultDate = attrs.defaultDate || moment();
+      var difference =  scope.$eval(attrs.monthlyDifference);
+      var minDate = reservedDates[attrs.minDate] || moment(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate();
+      var maxDate = reservedDates[attrs.maxDate] || moment(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate();
+
+      var maxTime = roundTime(maxDate);
+
       var showTime = Boolean(attrs.showTime);
+
+      var defaultDate = attrs.defaultDate || today;
+      var defaultTime = attrs.defaultTime || (maxDate && maxDate.diff(moment(defaultDate)) === 0 && maxTime<noon ? maxTime : noon);
+
+      scope.timeOptions = [];
 
       $(element).datetimepicker({
         pickTime: false,
         language: 'nn',
         format: 'DD.MM.YY',
-        minDate: scope.$eval(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate(),
-        maxDate: scope.$eval(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate()
+        minDate: minDate,
+        maxDate: maxDate
       }).on('dp.change', function () {
         scope.$apply(function () {
-          ngModelCtrl.$setViewValue(getModelDateTime());
+          var modelDateTime = getModelDateTime();
+
+          if (showTime && maxDate){
+            var isMaxDateSelected = maxDate.diff(modelDateTime, 'days') === 0;
+            if (isMaxDateSelected && scope.selectedTime>maxTime ){
+              scope.selectedTime = defaultTime;
+              modelDateTime = getModelDateTime();
+            }
+          }
+          ngModelCtrl.$setViewValue(modelDateTime);
         });
       }).on('dp.error', function () {
         scope.$apply(function () {
@@ -40,54 +65,73 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
 
 
       scope.$watch(scope.keyModelName, function() {
-          /* --- set initial values for date and time --- */
-          $timeout(function() {
-            $time.val(ngModelCtrl.$viewValue ? getViewTime() : defaultTime);
-            $(element).data('DateTimePicker').setDate(ngModelCtrl.$viewValue ? getViewDate() : defaultDate);
-          });
+        $timeout(function() {
+          var isMaxDateSelected = maxDate.diff(ngModelCtrl.$viewValue, 'days') === 0;
+          setTimepickerRestrictions(showTime && isMaxDateSelected && maxTime);
+
+          scope.selectedTime = getViewTime();
+          scope.selectedDate = getViewDate();
+        });
       });
 
       if (showTime){
-        var HH = 24;
-
-        for (var h=0; h < HH; h++){
-          $time.append(
-            '<option>'+formatTime(h+':00')+'</option>'+
-            '<option>'+formatTime(h+':30')+'</option>'
-          );
-        }
-
-        $time.change(function() {
-          scope.$apply(function () {
-            ngModelCtrl.$setViewValue(getModelDateTime());
-         });
-        });
+        initTimepicker();
+        scope.selectedTimeChanged = function(){
+          ngModelCtrl.$setViewValue(getModelDateTime());
+        };
       }
 
       /* --- function is used to set model's viewValue --- */
       function getModelDateTime(){
         var date = $date.val();
-        var time = $time.val();
-
-        return toIsoFormat(date, time);
+        return toIsoFormat(date, scope.selectedTime);
       }
 
       /* --- helper functions --- */
       function toIsoFormat(date, time){
-        return moment(date, 'DD.MM.YY').format('YYYY-MM-DD')+(showTime ? ('T'+moment(time, 'HH:mm').format('HH:mm:ss')) : '');
+        return moment(date, 'DD.MM.YY').format('YYYY-MM-DD') +
+                (showTime ? ('T'+moment(time, 'HH:mm').format('HH:mm:ss')) : '');
       }
 
       function formatTime(time){
         return (time || '').replace(/^(\d{1}):/, '0$1:');
       }
 
+      function roundTime(time){
+        if (!time) return null;
+
+        var roundInterval = 30;
+        var remainder = time.minute() % roundInterval;
+
+        return time
+                .subtract('minutes', remainder)
+                .format('HH:mm');
+      }
+
       /* --- functions for initial val setting --- */
       function getViewTime(){
-        return moment(ngModelCtrl.$viewValue).format('HH:mm');
+        return ngModelCtrl.$viewValue ? moment(ngModelCtrl.$viewValue).format('HH:mm') : defaultTime;
       }
 
       function getViewDate(){
-        return moment(ngModelCtrl.$viewValue).format('DD.MM.YY');
+        return moment(ngModelCtrl.$viewValue || defaultDate).format('DD.MM.YY');
+      }
+
+      function initTimepicker(){
+        for (var h=0; h<HH; h++){
+          [':00', ':30'].forEach(function(mins){
+            scope.timeOptions.push({
+              value: formatTime(h + mins),
+              isDisabled: false
+            });
+          });
+        }
+      }
+
+      function setTimepickerRestrictions(maxTimeOption){
+        scope.timeOptions.forEach(function(timeOption){
+          timeOption.isDisabled = maxTimeOption && timeOption.value > maxTimeOption;
+        });
       }
 
     }
