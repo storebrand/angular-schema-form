@@ -278,3 +278,6 @@ form .col-md-12 {
 .select.timepicker select {
   padding-right: 15px;
 }
+option[disabled='disabled'] {
+  color: #999999;
+}

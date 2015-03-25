@@ -23,18 +23,22 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       };
 
       var $date = $(element).find('input');
-      var $time = $(element).find('select');
 
       var difference =  scope.$eval(attrs.monthlyDifference);
+
       var minDate = reservedDates[attrs.minDate] || moment(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate();
       var maxDate = reservedDates[attrs.maxDate] || moment(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate();
 
+      var minTime = roundTime(minDate);
       var maxTime = roundTime(maxDate);
 
       var showTime = Boolean(attrs.showTime);
 
       var defaultDate = attrs.defaultDate || today;
-      var defaultTime = attrs.defaultTime || (maxDate && maxDate.diff(moment(defaultDate)) === 0 && maxTime<noon ? maxTime : noon);
+
+      var defaultTime = attrs.defaultTime ||
+        (maxDate && maxDate.diff(moment(defaultDate)) === 0 && maxTime<noon ? maxTime :
+          (minDate && minDate.diff(moment(defaultDate)) === 0 && minTime>noon ? minTime : noon));
 
       scope.timeOptions = [];
 
@@ -50,7 +54,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
 
           if (showTime && maxDate){
             var isMaxDateSelected = maxDate.diff(modelDateTime, 'days') === 0;
-            if (isMaxDateSelected && scope.selectedTime>maxTime ){
+            var isMinDateSelected = minDate.diff(modelDateTime, 'days') === 0;
+            if (isMaxDateSelected && scope.selectedTime>maxTime || isMinDateSelected && scope.selectedTime<minTime){
               scope.selectedTime = defaultTime;
               modelDateTime = getModelDateTime();
             }
@@ -63,14 +68,44 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         });
       });
 
-
+      var evaledDate;
       scope.$watch(scope.keyModelName, function() {
         $timeout(function() {
+          evaledDate = scope.$eval(attrs.minDate);
+          if (!minDate.isValid() && evaledDate && moment(evaledDate).isValid()) {
+            minDate = moment(evaledDate);
+            if (defaultDate < minDate){
+              defaultDate = minDate;
+            }
+            $(element).data('DateTimePicker').setMinDate(minDate);
+          }
+
+          evaledDate = scope.$eval(attrs.maxDate);
+          if (!maxDate.isValid() && evaledDate && moment(evaledDate).isValid()) {
+            maxDate = moment(evaledDate);
+            if (defaultDate > maxDate){
+              defaultDate = maxDate;
+            }
+            $(element).data('DateTimePicker').setMaxDate(maxDate);
+          }
+
           var isMaxDateSelected = maxDate.diff(ngModelCtrl.$viewValue, 'days') === 0;
-          setTimepickerRestrictions(showTime && isMaxDateSelected && maxTime);
+          var isMinDateSelected = minDate.diff(ngModelCtrl.$viewValue, 'days') === 0;
+          setTimepickerRestrictions(showTime && isMaxDateSelected && maxTime, showTime && isMinDateSelected && minTime);
 
           scope.selectedTime = getViewTime();
-          scope.selectedDate = getViewDate();
+
+          var viewDate = getViewDate();
+
+          if (moment(viewDate, 'DD.MM.YY')>maxDate){
+            viewDate = maxDate.format('DD.MM.YY');
+          }
+
+          if (moment(viewDate, 'DD.MM.YY')>minDate){
+            viewDate = minDate.format('DD.MM.YY');
+          }
+
+          $(element).data('DateTimePicker').setDate(viewDate);
         });
       });
 
@@ -128,9 +163,10 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         }
       }
 
-      function setTimepickerRestrictions(maxTimeOption){
+      function setTimepickerRestrictions(maxTimeOption, minTimeOption){
         scope.timeOptions.forEach(function(timeOption){
-          timeOption.isDisabled = maxTimeOption && timeOption.value > maxTimeOption;
+          timeOption.isDisabled = (maxTimeOption && timeOption.value > maxTimeOption) ||
+            (minTimeOption && timeOption.value < minTimeOption);
         });
       }
 
