@@ -17,7 +17,6 @@ angular.module('schemaForm').factory('formFormatters', [function () {
         return parsed;
       }
     },
-
     'phoneNumber': function(input){
       input = input.replace(/\s+/g, '');
       input = input.replace(/\-+/g, '');
