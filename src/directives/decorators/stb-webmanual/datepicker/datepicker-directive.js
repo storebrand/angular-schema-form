@@ -96,12 +96,11 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
           scope.selectedTime = getViewTime();
 
           var viewDate = getViewDate();
-
-          if (moment(viewDate, 'DD.MM.YY')>maxDate){
+          if (moment(viewDate, 'DD.MM.YY').diff(maxDate, 'days') > 0){
             viewDate = maxDate.format('DD.MM.YY');
           }
 
-          if (moment(viewDate, 'DD.MM.YY')>minDate){
+          if (moment(viewDate, 'DD.MM.YY').diff(minDate, 'days') < 0){
             viewDate = minDate.format('DD.MM.YY');
           }
 
