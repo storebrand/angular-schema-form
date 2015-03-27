@@ -75,7 +75,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       scope.$watch(scope.keyModelName, function() {
         $timeout(function() {
           evaledDate = scope.$eval(attrs.minDate);
-          console.log('minDate', evaledDate);
           if (!minDate.isValid() && evaledDate && moment(evaledDate).isValid()) {
             minDate = moment(evaledDate);
             if (defaultDate < minDate){
@@ -85,7 +84,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
           }
 
           evaledDate = scope.$eval(attrs.maxDate);
-          console.log('maxDate', evaledDate);
           if (!maxDate.isValid() && evaledDate && moment(evaledDate).isValid()) {
             maxDate = moment(evaledDate);
             if (defaultDate > maxDate){
