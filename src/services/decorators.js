@@ -1,5 +1,7 @@
 angular.module('schemaForm').provider('schemaFormDecorators',
 ['$compileProvider', 'sfPathProvider', function($compileProvider, sfPathProvider) {
+  'use strict';
+
   var defaultDecorator = '';
   var directives = {};
 
@@ -353,19 +355,20 @@ angular.module('schemaForm').provider('schemaFormDecorators',
              * error (i.e. required)
              */
             scope.errorMessage = function(schemaError) {
+              var validationMessage = scope.form.validationMessage;
               //User has supplied validation messages
-              if (scope.form.validationMessage) {
+              if (validationMessage) {
                 if (schemaError) {
-                  if (angular.isString(scope.form.validationMessage)) {
-                    return scope.form.validationMessage;
+                  if (angular.isString(validationMessage)) {
+                    return validationMessage;
                   }
 
-                  return scope.form.validationMessage[schemaError.code] ||
-                         scope.form.validationMessage['default'];
+                  return validationMessage[schemaError.code] ||
+                    validationMessage['default'];
                 } else {
-                  return scope.form.validationMessage.required ||
-                         scope.form.validationMessage['default'] ||
-                         scope.form.validationMessage;
+                  return validationMessage.required ||
+                         validationMessage['default'] ||
+                         validationMessage;
                 }
               }
 
@@ -376,11 +379,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               //Otherwise we only use required so it must be it.
               return 'Required';
-
             };
 
             scope.initFileUploader = function () {
-
               var modelExpression = $parse(scope.keyModelName);
               var getModel = function() {
                 if (!modelExpression(scope)) {
