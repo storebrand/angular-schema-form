@@ -8,7 +8,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="object in $$value$$" index="{{$index}}">
-                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object)">
+                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object) track by $index">
                     <div ng-bind="column" class="stb-table-td-container"></div>
                 </td>
                 <td ng-repeat="action in form.actions" class="action-col">
