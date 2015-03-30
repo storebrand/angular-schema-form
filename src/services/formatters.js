@@ -21,7 +21,7 @@ angular.module('schemaForm').factory('formFormatters', [function () {
       input = input.replace(/\s+/g, '');
       input = input.replace(/\-+/g, '');
 
-      if (/^\\d{8}$/.test(input)) {
+      if (/^\d{8}$/.test(input)) {
         return input;
       }
     }
