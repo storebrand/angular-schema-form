@@ -21,6 +21,7 @@
               ng-model="$$value$$"
               schema-validate="form"
               class='input-group date datePicker'
+              events="form.events"
               show-time="{{form.showTime}}"
               min-date="{{form.minDate}}"
               max-date="{{form.maxDate}}"
@@ -28,7 +29,6 @@
               monthly-difference="form.monthlyDifference"
               data-date-format="DD/MM/YYYY">
                 <input ng-show="form.key"
-                       ng-model="selectedDate"
                        placeholder="{{form.placeholder}}"
                        type="text"
                        class="form-control" />
