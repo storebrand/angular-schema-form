@@ -15,7 +15,7 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
       elm.bind('blur', function() {
 
         scope.$apply(function() {
-          if (!/[^\s]/.test(elm.val()) && ngModelCtrl.$pristine) {
+          if (!/[^\s]/.test(elm.val()) && ngModelCtrl.$pristine && !ngModelCtrl.$modelValue) {
           } else {
             ngModelCtrl.$setViewValue(formatter(elm.val()));
             ngModelCtrl.$render();
