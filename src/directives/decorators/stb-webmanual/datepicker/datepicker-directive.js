@@ -40,7 +40,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
 
       $(element).datetimepicker({
         pickTime: false,
-        language: 'nn',
+        language: 'nb',
         format: 'DD.MM.YY',
         minDate: minDate,
         maxDate: maxDate
