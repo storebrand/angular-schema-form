@@ -493,7 +493,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
              * error (i.e. required)
              */
             scope.errorMessage = function(schemaError) {
-              var validationMessage = trimIfStr(scope.form.validationMessage);
+              var validationMessage = scope.form.validationMessage;
               //User has supplied validation messages
               if (validationMessage) {
                 if (schemaError) {
@@ -501,12 +501,12 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                     return validationMessage;
                   }
 
-                  return trimIfStr(validationMessage[schemaError.code]) ||
-                    trimIfStr(validationMessage['default']);
+                  return validationMessage[schemaError.code] ||
+                    validationMessage['default'];
                 } else {
-                  return trimIfStr(validationMessage.required) ||
-                         trimIfStr(validationMessage['default']) ||
-                         trimIfStr(validationMessage);
+                  return validationMessage.required ||
+                         validationMessage['default'] ||
+                         validationMessage;
                 }
               }
 
@@ -517,15 +517,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               //Otherwise we only use required so it must be it.
               return 'Required';
-
-              function trimIfStr(msg){
-                return angular.isString(msg) ? msg.trim() : msg;
-              }
-
             };
 
             scope.initFileUploader = function () {
-
               var modelExpression = $parse(scope.keyModelName);
               var getModel = function() {
                 if (!modelExpression(scope)) {
