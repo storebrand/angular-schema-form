@@ -395,7 +395,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
                 var modelItem = {
-                  status: 'inProgress',
+                  status: 'uploading',
                   fileName: item.file.name,
                   uploaderFileItem: item
                 };
@@ -405,7 +405,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.onSuccessItem = function(item, response) {
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
-                    modelItem.status = 'justAttached';
+                    modelItem.status = 'uploaded';
                     $.extend(modelItem, response);
                     modelExpression.assign(scope, getModel());
                     return true;
@@ -442,14 +442,14 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
-                if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
+                if (!scope.inStatus(modelItem, ['uploading', 'error']) && idKey && modelItem[idKey]) {
                   var deleteConfig = {
                     url: scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]),
                     method: scope.form.deleteConfig.method || 'DELETE',
                     headers: scope.form.deleteConfig.headers
                   };
                   $http(deleteConfig);
-                } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
+                } else if (scope.inStatus(modelItem, ['uploading']) && modelItem.uploaderFileItem) {
                   modelItem.uploaderFileItem.cancel();
                 }
               };
@@ -474,8 +474,8 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 } else {
                   scope.removeFile(item);
                 }
-              }
-            }
+              };
+            };
 
             scope.confirmOnClick = function(index){
               var delEvents = (scope.form.confirmDelete || {}).events || {};
@@ -489,7 +489,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               } else {
                 action.action(modelData, index);
               }
-            }
+            };
 
           }
         };

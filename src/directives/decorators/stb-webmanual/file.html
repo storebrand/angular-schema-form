@@ -9,9 +9,9 @@
             </span>
             <span class="filename" ng-bind="fileName"></span>
 
-            <span ng-if="inStatus(item, ['inProgress'])" class="upload-progress">uploading... {{item.uploaderFileItem.progress}}%</span>
-            <span ng-if="inStatus(item, ['justAttached'])" class="uploaded">uploaded</span>
-            <span ng-if="inStatus(item, ['error'])" class="upload-error">error occured</span>
+            <span ng-if="inStatus(item, ['uploading'])" class="upload-progress">Laster opp... {{item.uploaderFileItem.progress}}%</span>
+            <span ng-if="inStatus(item, ['uploaded'])" class="uploaded">Lastet opp</span>
+            <span ng-if="inStatus(item, ['error'])" class="upload-error">Feil</span>
 
             <span
               class="delete"
