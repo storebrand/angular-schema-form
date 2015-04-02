@@ -533,7 +533,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
                 var modelItem = {
-                  status: 'inProgress',
                   fileName: item.file.name,
                   uploaderFileItem: item
                 };
@@ -543,7 +542,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.onSuccessItem = function(item, response) {
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
-                    modelItem.status = 'justAttached';
                     $.extend(modelItem, response);
                     modelExpression.assign(scope, getModel());
                     return true;
@@ -554,7 +552,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.onErrorItem = function(item) {
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
-                    modelItem.status = 'error';
                     modelExpression.assign(scope, getModel());
                     return true;
                   }
@@ -580,14 +577,14 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
-                if (!scope.inStatus(modelItem, ['inProgress', 'error']) && idKey && modelItem[idKey]) {
+                if ((!modelItem.uploaderFileItem || modelItem.uploaderFileItem.isUploaded) && idKey && modelItem[idKey]) {
                   var deleteConfig = {
                     url: scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]),
                     method: scope.form.deleteConfig.method || 'DELETE',
                     headers: scope.form.deleteConfig.headers
                   };
                   $http(deleteConfig);
-                } else if (scope.inStatus(modelItem, ['inProgress']) && modelItem.uploaderFileItem) {
+                } else if (modelItem.uploaderFileItem && modelItem.uploaderFileItem.isUploading) {
                   modelItem.uploaderFileItem.cancel();
                 }
               };
@@ -597,23 +594,14 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 return re.exec(fileName)[1];
               };
 
-              scope.inStatus = function(item, statuses) {
-                var flag;
-                statuses.some(function (status){
-                  flag = (item.status === status);
-                  return flag;
-                });
-                return flag;
-              };
-
               scope.confirmOnFileRemove = function(item){
                 if (scope.form.confirmDelete){
                   scope.params.submit = angular.bind({}, scope.removeFile, item);
                 } else {
                   scope.removeFile(item);
                 }
-              }
-            }
+              };
+            };
 
             scope.confirmOnClick = function(index){
               var delEvents = (scope.form.confirmDelete || {}).events || {};
@@ -627,7 +615,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               } else {
                 action.action(modelData, index);
               }
-            }
+            };
 
           }
         };
