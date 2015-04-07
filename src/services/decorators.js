@@ -394,6 +394,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
+                scope.fileUploadError = null;
                 var modelItem = {
                   fileName: item.file.name,
                   uploaderFileItem: item
@@ -419,6 +420,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   }
                   return false;
                 });
+              };
+
+              uploader.onWhenAddingFileFailed = function(item, error){
+                if (!scope.fileUploadError) scope.fileUploadError = {};
+                scope.fileUploadError.title = error.title;
               };
 
               scope.uploader = uploader;
