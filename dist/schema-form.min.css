@@ -281,3 +281,89 @@ form .col-md-12 {
 option[disabled='disabled'] {
   color: #999999;
 }
+form .stb-form-group,
+form .stb-form-group input {
+  max-width: 100%;
+  min-width: 100px;
+}
+/****************************************/
+/***********TABLES ADAPTIVE**************/
+/****************************************/
+.table-adaptive {
+  min-width: 224px;
+  max-width: 100%;
+}
+.table-adaptive .table-header {
+  display: none;
+}
+.table-adaptive .table-actions {
+  width: 50%;
+  float: left;
+}
+.table-adaptive .table-content,
+.table-adaptive .table-actions {
+  padding: 12px 8px;
+  border-bottom: 1px solid #e6d1b8;
+}
+.table-adaptive .table-row {
+  display: block;
+  overflow: hidden;
+  background-color: #FFFFFF;
+}
+@media (min-width: 320px) {
+  .table-adaptive {
+    text-align: center;
+  }
+  .table-adaptive .table-content:first-child {
+    font-weight: bold;
+    background-color: #e6d1b8;
+  }
+}
+@media (min-width: 768px) {
+  .table-adaptive {
+    display: table;
+    text-align: left;
+    width: 100%;
+  }
+  .table-adaptive .table-header {
+    display: table-header-group;
+    background-color: #e6d1b8;
+    font-weight: bold;
+    color: #000000;
+  }
+  .table-adaptive .table-body {
+    display: table-row-group;
+  }
+  .table-adaptive .table-row {
+    display: table-row;
+  }
+  .table-adaptive .table-row:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  .table-adaptive .table-row:nth-child(odd) {
+    background-color: #FFFFFF;
+  }
+  .table-adaptive .table-column-titles,
+  .table-adaptive .table-action-titles,
+  .table-adaptive .table-content,
+  .table-adaptive .table-actions {
+    display: table-cell;
+    vertical-align: bottom;
+  }
+  .table-adaptive .table-column-titles,
+  .table-adaptive .table-action-titles {
+    height: 72px;
+    padding: 8px;
+  }
+  .table-adaptive .table-content:first-child {
+    font-weight: normal;
+    background-color: transparent;
+  }
+  .table-adaptive .table-actions {
+    width: auto;
+    float: none;
+  }
+}
+/****************************************/
+/**********END TABLES ADAPTIVE***********/
+/****************************************/

@@ -2,6 +2,8 @@
 @stbcolor-third: #819f2b;
 @stbcolor-error: #a94442;
 @stbcolor-gray-fourth: #a6a6a6;
+@stbcolor-gray-first: #f2f2f2;
+@stbcolor-nude: #e6d1b8;
 
 @standart-indent: 24px;
 @standart-font-size: 16px;
@@ -351,3 +353,111 @@ form {
 option[disabled='disabled'] {
   color: #999999;
 }
+
+form .stb-form-group,
+form .stb-form-group input {
+  max-width: 100%;
+  min-width: 100px;
+}
+
+
+  /****************************************/
+ /***********TABLES ADAPTIVE**************/
+/****************************************/
+
+.table-adaptive {
+  min-width: 224px;
+  max-width: 100%;
+
+  .table-header {
+    display: none;
+  }
+
+  .table-actions {
+    width: 50%;
+    float: left;
+  }
+
+  .table-content, .table-actions {
+    padding: 12px 8px;
+    border-bottom: 1px solid @stbcolor-nude;
+  }
+
+  .table-row {
+    display: block;
+    overflow: hidden;
+    background-color: #FFFFFF;
+  }
+}
+
+@media (min-width: 320px) {
+
+  .table-adaptive {
+    text-align: center;
+
+    .table-content:first-child {
+      font-weight: bold;
+      background-color: @stbcolor-nude;
+    }
+
+  }
+
+}
+
+@media (min-width: 768px) {
+
+  .table-adaptive {
+    display: table;
+    text-align: left;
+    width: 100%;
+    .table-header {
+      display: table-header-group;
+      background-color: @stbcolor-nude;
+      font-weight: bold;
+      color: #000000;
+    }
+
+    .table-body {
+      display: table-row-group;
+    }
+
+    .table-row {
+      display: table-row;
+    }
+
+    .table-row:nth-child(even) {
+      background-color: @stbcolor-gray-first;
+    }
+
+    .table-row:nth-child(odd) {
+      background-color: #FFFFFF;
+    }
+
+    .table-column-titles, .table-action-titles,
+    .table-content, .table-actions {
+      display: table-cell;
+      vertical-align: bottom;
+    }
+
+    .table-column-titles, .table-action-titles {
+      height: 72px;
+      padding: 8px;
+    }
+
+    .table-content:first-child {
+      font-weight: normal;
+      background-color: transparent;
+    }
+
+    .table-actions {
+      width: auto;
+      float: none;
+    }
+
+  }
+
+}
+
+  /****************************************/
+ /**********END TABLES ADAPTIVE***********/
+/****************************************/
