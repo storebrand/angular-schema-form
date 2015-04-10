@@ -583,7 +583,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
-                if ((!modelItem.uploaderFileItem || (modelItem.uploaderFileItem.isUploaded && !item.uploaderFileItem.isError)) && idKey && modelItem[idKey]) {
+                if ((!modelItem.uploaderFileItem || (modelItem.uploaderFileItem.isUploaded && !modelItem.uploaderFileItem.isError)) && idKey && modelItem[idKey]) {
                   var deleteConfig = {
                     url: scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]),
                     method: scope.form.deleteConfig.method || 'DELETE',
