@@ -128,18 +128,18 @@ label.empty-view {
   margin: 0;
 }
 .row.info-message-wrapper .info-message .msgText button.close {
+  font-size: 16px !important;
   float: none;
-  opacity: .8;
-  filter: alpha(opacity=80);
   margin-top: 24px;
+  font-family: 'Open Sans', 'Arial', 'ArialMT', sans-serif !important;
 }
 .row.info-message-wrapper .info-message .msgText button.close:focus,
 .row.info-message-wrapper .info-message .msgText button.close:hover {
-  opacity: .5;
-  filter: alpha(opacity=50);
+  opacity: 1 !important;
 }
 .row.info-message-wrapper .info-message .msgText button.close .remove {
-  margin-right: 10px;
+  margin-right: 10px !important;
+  margin-bottom: 0 !important;
 }
 .info-button {
   margin-bottom: -3px;
