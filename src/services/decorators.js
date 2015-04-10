@@ -394,6 +394,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
               uploader.onAfterAddingFile = function(item) {
+                scope.fileUploadError = null;
                 var modelItem = {
                   fileName: item.file.name,
                   uploaderFileItem: item
@@ -421,6 +422,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 });
               };
 
+              uploader.onWhenAddingFileFailed = function(item, error) {
+                scope.fileUploadError = scope.fileUploadError || {};
+                scope.fileUploadError.title = error.title;
+              };
+
               scope.uploader = uploader;
 
               scope.removeFile = function(modelItem) {
@@ -439,7 +445,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 }
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
-                if ((!modelItem.uploaderFileItem || modelItem.uploaderFileItem.isUploaded) && idKey && modelItem[idKey]) {
+                if ((!modelItem.uploaderFileItem || (modelItem.uploaderFileItem.isUploaded && !item.uploaderFileItem.isError)) && idKey && modelItem[idKey]) {
                   var deleteConfig = {
                     url: scope.form.deleteConfig.url.replace(/\{.+\}/, modelItem[idKey]),
                     method: scope.form.deleteConfig.method || 'DELETE',

@@ -9,8 +9,8 @@
             </span>
             <span class="filename" ng-bind="fileName"></span>
 
-            <span ng-if="item.uploaderFileItem && item.uploaderFileItem.isUploading" class="upload-progress">Laster opp... {{item.uploaderFileItem.progress}}%</span>
-            <span ng-if="item.uploaderFileItem && item.uploaderFileItem.isUploaded" class="uploaded">Lastet opp</span>
+            <span ng-if="item.uploaderFileItem && item.uploaderFileItem.isUploading && !item.uploaderFileItem.isError" class="upload-progress">Laster opp... {{item.uploaderFileItem.progress}}%</span>
+            <span ng-if="item.uploaderFileItem && item.uploaderFileItem.isUploaded && !item.uploaderFileItem.isError" class="uploaded">Lastet opp</span>
             <span ng-if="item.uploaderFileItem && item.uploaderFileItem.isError" class="upload-error">Feil</span>
 
             <span
@@ -19,6 +19,10 @@
               ng-attr-data-target="#{{params.id}}"
               ng-click="confirmOnFileRemove(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>
         </li>
+    </ul>
+
+    <ul class="filetable" ng-if="fileUploadError">
+        <li class="file"><span class="upload-error">{{fileUploadError.title}}</span></li>
     </ul>
 
     <input type="file"
