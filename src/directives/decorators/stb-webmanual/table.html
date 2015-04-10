@@ -1,17 +1,17 @@
 <div  ng-show="$$value$$ && $$value$$.length && showCondition()"
       ng-init="params = {id: form.key+'ModalDlg', submit: form.confirmDelete.events.submit, texts: form.confirmDelete.texts}">
 
-    <table class="stb-table hoverable">
-        <thead>
-            <th ng-repeat="item in form.columnTitles">{{item}}</th>
-            <th ng-repeat="action in form.actions" class="action-col"></th>
-        </thead>
-        <tbody>
-            <tr ng-repeat="object in $$value$$" index="{{$index}}">
-                <td ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object) track by $index">
-                    <div ng-bind="column" class="stb-table-td-container"></div>
-                </td>
-                <td ng-repeat="action in form.actions" class="action-col">
+    <div class="table-adaptive">
+        <div class="table-header">
+            <div class="table-column-titles"            ng-repeat="item in form.columnTitles">{{item}}</div>
+            <div class="table-action-titles action-col" ng-repeat="action in form.actions"></div>
+        </div>
+        <div class="table-body">
+            <div class="table-row" ng-repeat="object in $$value$$" index="{{$index}}">
+                <div class="table-content" ng-repeat="column in (form.convertToRow ? form.convertToRow(object) : object) track by $index">
+                    <div ng-bind="column" class="stb-table-td-container table-content-item"></div>
+                </div>
+                <div class="table-actions" ng-repeat="action in form.actions" class="action-col">
                     <span ng-class="{'stb-sprite-small': action.type,
                                      remove : action.type === 'delete',
                                      red : action.type === 'delete',
@@ -21,10 +21,10 @@
                        ng-attr-data-target="{{ action.type === 'delete' ? ('#'+params.id) : ''}}"
                        ng-click="confirmOnClick($parent.$index)"
                        ng-bind="action.title"></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <span ng-show="!!form.confirmDelete">
