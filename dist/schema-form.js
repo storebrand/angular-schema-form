@@ -424,8 +424,14 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               }
 
               if (disabled) {
-                scope.ngModelHolder.$setViewValue(undefined);
-                element.find('input').val('');
+                //scope.ngModelHolder.$setViewValue(undefined);
+                scope.ngModelHolder.$setPristine();
+                //element.find('input').val('');
+
+                if (element.find('input').val() === ''){
+                  scope.ngModelHolder.$setViewValue(undefined);
+                  scope.ngModelHolder.$setPristine();
+                }
               }
               return disabled || scope.form.disabled;
             };
