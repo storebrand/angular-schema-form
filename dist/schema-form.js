@@ -1817,7 +1817,7 @@ angular.module('schemaForm')
   }
 ]);
 
-angular.module('schemaForm').directive('schemaValidate', ['sfValidator', function (sfValidator) {
+angular.module('schemaForm').directive('schemaValidate', ['$parse', 'sfValidator', function ($parse, sfValidator) {
   return {
     restrict: 'A',
     scope: false,
@@ -1937,16 +1937,38 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
 
       scope.$on('schemaFormValidationClean', function (event, args) {
 
+
+
+
+
+
         var modelKeys = args && args.modelKeys;
 
         if (modelKeys && !modelKeys.indexOf) {
           throw '"modelKeys" property of arguments passed should be an array';
         }
 
+        //modelKeys = ['creditInsuranceCardOwner', 'creditInsuranceCardNumber'];
+
         if (isNeedToProcessValidationActions(form.key[0], modelKeys)) {
+
           ngModel.$dirty = false;
           ngModel.$pristine = true;
+          //ngModel.$setValidity('schemaValidate', true);
+          //ngModel.$setPristine(); //add class ng-pristine and remove ng-dirty HOoooRAY
+          if(ngModel.$viewValue !== ngModel.$modelValue) {
+            ngModel.$setViewValue(ngModel.$modelValue, 'schemaFormValidationClean');
+          }
+
+            console.log(ngModel.$viewValue);
+            console.log(ngModel.$modelValue);
+
+          element[0].value = null;
+          //ngModel.$setViewValue(undefined);
+
         }
+
+
 
       });
 
