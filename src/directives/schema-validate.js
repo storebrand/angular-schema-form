@@ -117,7 +117,6 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       });
 
       scope.$on('schemaFormValidationClean', function (event, args) {
-
         var modelKeys = args && args.modelKeys;
 
         if (modelKeys && !modelKeys.indexOf) {
@@ -125,10 +124,10 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
         }
 
         if (isNeedToProcessValidationActions(form.key[0], modelKeys)) {
-          ngModel.$dirty = false;
-          ngModel.$pristine = true;
+          element[0].value = null; //clean input value
+          ngModel.$setViewValue(undefined); //clean view value
+          ngModel.$setPristine(); //add class ng-pristine and remove ng-dirty, removes error message and styling
         }
-
       });
 
       //This works since we now we're inside a decorator and that this is the decorators scope.
