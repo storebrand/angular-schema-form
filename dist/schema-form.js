@@ -1817,7 +1817,7 @@ angular.module('schemaForm')
   }
 ]);
 
-angular.module('schemaForm').directive('schemaValidate', ['$parse', 'sfValidator', function ($parse, sfValidator) {
+angular.module('schemaForm').directive('schemaValidate', ['sfValidator', function (sfValidator) {
   return {
     restrict: 'A',
     scope: false,
