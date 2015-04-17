@@ -1943,14 +1943,9 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
         }
 
         if (isNeedToProcessValidationActions(form.key[0], modelKeys)) {
-
-          if(ngModel.$viewValue !== ngModel.$modelValue) {
-            ngModel.$setViewValue(ngModel.$modelValue, 'schemaFormValidationClean');
-          }
-
-          element[0].value = null; //clean unput value
+          element[0].value = null; //clean input value
+          ngModel.$setViewValue(undefined); //clean view value
           ngModel.$setPristine(); //add class ng-pristine and remove ng-dirty, removes error message and styling
-
         }
       });
 
