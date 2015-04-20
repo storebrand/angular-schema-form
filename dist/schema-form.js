@@ -1862,7 +1862,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       // Get in last of the parses so the parsed value has the correct type.
       if (ngModel.$validators) { // Angular 1.3
         ngModel.$validators.schema = function (value) {
-          var result = sfValidator.validate(getForm(), value);
+          var result = sfValidator.validate(getForm(), value) || {};
           error = result.error;
           return result.valid;
         };
