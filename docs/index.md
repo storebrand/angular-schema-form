@@ -20,7 +20,7 @@ Documentation
 1. [Specific options and types](#specific-options-and-types)
     1. [fieldset and section](#fieldset-and-section)
     1. [conditional](#conditional)
-    1. [select,dropdown and checkboxes](#select,dropdown-and-checkboxes)
+    1. [select,dropdown and checkboxes](#select-and-dropdown-and-checkboxes)
     1. [actions](#actions)
     1. [button](#button)
     1. [radios and radiobuttons](#radios-and-radiobuttons)
@@ -28,7 +28,7 @@ Documentation
     1. [customer](#customer)
     1. [date-info](#dateinfo)
     1. [datepicker](#datepicker)
-    1. [errorbox,infobox and successbox](#errorbox,infobox-and-successbox)
+    1. [errorbox,infobox and successbox](#errorbox-and-infobox-and-successbox)
     1. [white-box](#whitebox)
     1. [hidden](#hidden)
 1. [Post process function](#post-process-function)
@@ -364,7 +364,7 @@ Take a look above to undestand how expressions work.
             {"expression": "hasAutoIdentificationNumber === true", "value": false},
             {"expression": "hasAutoIdentificationNumber === true && importAndCustomsCleared === true", "value": null}
           ]
-          ```
+```
 That means that if on of the expressions in conditionalValues array is truthy then model value will be set to value of relative expression.
 
 ### onChange
@@ -464,7 +464,7 @@ They do need a list of ```items``` to have as children.
 }
 ```
 
-### select,dropdown and checkboxes
+### select and dropdown and checkboxes
 
 *select* and *checkboxes* can take an attribute, `titleMap`, wich defines a name
 and a value. The value is bound to the model while the name is used for display.
@@ -730,13 +730,13 @@ basic usage:
     ]
   }
 ```
-This element emits `customer:validate` event when all three fields are set with such data `{
+This element emits `customer:validate` event when all three fields are set with such data ```{
                     ssn: personNumber,
                     firstName: firstName,
                     lastName: lastName
-                  })`
+                  })```
 Also it listens to the `customer:isValid` event for validation and error message showing and waits for such info
-`{isValid: boolean, firstName: 'corrected name', lastName: 'corrected last name'}`
+```{isValid: boolean, firstName: 'corrected name', lastName: 'corrected last name'}```
 Corrected names can be same as sent ones but probably customer-master service will correct your spelling
 
 
@@ -751,20 +751,20 @@ Basic usage:
 
 ```javascript
 {
-              "type": "infodate",
-              "modelKey": "issueDate",
-              "dateKey": "_expirationDateDay",
-              "maxMonthlyDifference": 2,
-              "minMonthlyDifference": 0,
-              "additionalMonthlyDifference": 1,
-              "additionalDailyDifference": 1,
-              "hasDefaultDateValue": true,
-              "encoding": "nn",
-              "format": "Do MMMM YYYY",
-              "staticMessage": "Forsikringen vil gjelde fra",
-              "dependencies": ["intendsToMigrateInsurance", "expirationDateKnown", "_expirationDateDay"],
-              "expression": "intendsToMigrateInsurance === true && expirationDateKnown === true &&  _expirationDateDay !== undefined"
-            }
+  "type": "infodate",
+  "modelKey": "issueDate",
+  "dateKey": "_expirationDateDay",
+  "maxMonthlyDifference": 2,
+  "minMonthlyDifference": 0,
+  "additionalMonthlyDifference": 1,
+  "additionalDailyDifference": 1,
+  "hasDefaultDateValue": true,
+  "encoding": "nn",
+  "format": "Do MMMM YYYY",
+  "staticMessage": "Forsikringen vil gjelde fra",
+  "dependencies": ["intendsToMigrateInsurance", "expirationDateKnown", "_expirationDateDay"],
+  "expression": "intendsToMigrateInsurance === true && expirationDateKnown === true &&  _expirationDateDay !== undefined"
+}
 ```
 Here `modelKey` - name of property which wll be persisted in the model, `dateKey` - key of source date in the model,
 `maxMonthlyDifference` - how many month for current can be set as the current insurance buying date,  `minMonthlyDifference` - oposite of `maxMonthlyDifference`, `additionalMonthlyDifference` - if source date is more than `maxMonthlyDifference` from the current date then `current date + additionalMonthlyDifference + additionalDailyDifference` will be set as modelValue.
@@ -773,14 +773,14 @@ Here `modelKey` - name of property which wll be persisted in the model, `dateKey
 
 Basic usage: all the same as in other types but only `"format": "date"` should be set in schema definition for this field.
 
-### errorbox,infobox and successbox
+### errorbox and infobox and successbox
 
 Usage of all this element is basically the same.
 ```javascript
 {
-              "type": "infobox || errorbox || successbox",
-              "infoMessage": "Det er ikke mulig å flytte forsikringen fra et annet selskap hvis bilen ikke har reg.nr, vennligst ta kontakt med kundeservice"
-            },
+  "type": "infobox || errorbox || successbox",
+  "infoMessage": "Det er ikke mulig å flytte forsikringen fra et annet selskap hvis bilen ikke har reg.nr, vennligst ta kontakt med kundeservice"
+},
 ```
 ### whitebox
 
@@ -788,24 +788,24 @@ It's only a wrapper with white background and 100% width. Also it inverts all wh
 
 ```javascript
 {
-          "type": "whitebox",
-          "items": [...]
-          }
-          ```
+  "type": "whitebox",
+  "items": [...]
+}
+```
           
 ### hidden
 
 This type is using when we should interrupt form processing with some error
 
 ```javascript
-            {
-              "key": "_isNotAllowedToBuy",
-              "validationMessage": "Denne bilen kan dessverre ikke tegnes på nett, vennligst ta kontakt med kundeservice",
-              "type": "hidden",
-              "dependencies": ["importAndCustomsCleared"],
-              "expression": "importAndCustomsCleared === true"
-            }
-            ```
+{
+  "key": "_isNotAllowedToBuy",
+  "validationMessage": "Denne bilen kan dessverre ikke tegnes på nett, vennligst ta kontakt med kundeservice",
+  "type": "hidden",
+  "dependencies": ["importAndCustomsCleared"],
+  "expression": "importAndCustomsCleared === true"
+}
+```
 It also should be required in the schema definition to interrupt processing
 
 Post process function
