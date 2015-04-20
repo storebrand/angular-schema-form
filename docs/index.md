@@ -13,17 +13,24 @@ Documentation
     1. [Validation Messages](#validation-messages)
     1. [Inline feedback icons](#inline-feedback-icons)
     1. [ngModelOptions](#ngmodeloptions)
+    1. [dependencies and expression](#dependencies-and-expression)
+    1. [disabledExpression](#disabledExpression)
+    1. [validationExpression](#validationExpression)
+    1. [conditional values](#conditional-values)
 1. [Specific options and types](#specific-options-and-types)
     1. [fieldset and section](#fieldset-and-section)
     1. [conditional](#conditional)
-    1. [select and checkboxes](#select-and-checkboxes)
+    1. [select,dropdown and checkboxes](#select,dropdown-and-checkboxes)
     1. [actions](#actions)
     1. [button](#button)
     1. [radios and radiobuttons](#radios-and-radiobuttons)
     1. [help](#help)
-    1. [tabs](#tabs)
-    1. [array](#array)
-    1. [tabarray](#tabarray)
+    1. [customer](#customer)
+    1. [date-info](#dateinfo)
+    1. [datepicker](#datepicker)
+    1. [errorbox,infobox and successbox](#errorbox,infobox-and-successbox)
+    1. [white-box](#whitebox)
+    1. [hidden](#hidden)
 1. [Post process function](#post-process-function)
 
 Basic Usage
@@ -57,10 +64,12 @@ function FormController($scope) {
 ```
 
 Then load them into Schema Form using the `sfSchema`, `sfForm`, and `sfModel` directives.
+Also we're using custom stb-decorators, that's why we should use additional `sfDecoratorName` directive.
 
 ```html
 <div ng-controller="FormController">
-    <form sf-schema="schema" sf-form="form" sf-model="model"></form>
+    <form sf-schema="schema" sf-form="form" sf-model="model"
+    sf-decorator-name="stb-webmanual-decorator"></form>
 </div>
 ```
 
@@ -143,8 +152,8 @@ And the HTML would be something like this:
 
 Global Options
 --------------
-Schema Form also have two options you can set globally via the `sf-options`
-attribute which should be placed along side `sf-schema`.
+Schema Form also have three options you can set globally via the `sf-options`
+attribute which should be placed along side `sf-schema` and `default-globals`.
 
 `sf-options` takes an object with the following possible attributes.
 
@@ -159,13 +168,22 @@ i.e. changing the entire form to validate on blur. But can also be used to set
 [Validation Messages](#validation-messages) for all fields if you like a bit more
 friendlier messages.
 
+`default-globals` takes an object with the following possible attributes.
+
+| Attribute     |                         |
+|:--------------|:------------------------|
+| visibility | by default schema form uses no visibility for keys in models, if not provided in schema then is taken from global options |
+| category | sub dividing under visibility, by default is undefined, is taken from schema definition or from global options |
+| prefix | can be used for common prefixing both category and visibility options in schema definition |
+
 Ex.
 ```html
 <div ng-controller="FormController">
     <form sf-schema="schema"
           sf-form="form"
           sf-model="model"
-          sf-options="{ formDefaults: { ngModelOptions: { updateOn: 'blur' } }}"></form>
+          sf-options="{ formDefaults: { ngModelOptions: { updateOn: 'blur' } }}"
+          default-globals="{'visibility': 'open', 'category': '', 'prefix': 'group_'}"></form>
 </div>
 ```
 
@@ -179,7 +197,6 @@ Schema Form currently supports the following form field types out of the box:
 |:--------------|:------------------------|
 | fieldset      |  a fieldset with legend |
 | section       |  just a div             |
-| conditional   |  a section with a ```ng-if``` |
 | actions       |  horizontal button list, can only submit and buttons as items |
 | text          |  input with type text   |
 | textarea      |  a textarea             |
@@ -187,6 +204,7 @@ Schema Form currently supports the following form field types out of the box:
 | checkbox      |  a checkbox             |
 | checkboxes    |  list of checkboxes     |
 | select        |  a select (single value)|
+| dropdown      |  a select with ability to search |
 | submit        |  a submit button        |
 | button        |  a button               |
 | radios        |  radio buttons          |
@@ -196,9 +214,16 @@ Schema Form currently supports the following form field types out of the box:
 | tab           |  tabs with content     |
 | array         |  a list you can add, remove and reorder |
 | tabarray      |  a tabbed version of array |
+| customer      | common element for storebrand customer with validation by ssn, name and surname |
+| date-info     | element which represent corrected provided date value with text and able to set value to the model |
+| datepicker    | element for choosing date with interactive calendar |
+| errorbox      | one of the infoboxes which is only for error message representing |
+| hidden        |  errorbox with preventing model from correct validation |
+| infobox       |  almost the same as errorbox but with different styles  |
+| successbox    |  almost the same as errorbox but with different styles  |
+| white-box     |  wrapper for questions with white-background  |
 
-More field types can be added, for instance a "datepicker" type can be added by
-including the [datepicker addon](datepicker.md)
+
 
 
 Default form types
@@ -311,6 +336,37 @@ General options most field types can handle:
 }
 ```
 
+
+### dependencies and expression
+
+Each form element can contain dependencies array and expression string such as:
+```javascript
+        "dependencies": ["intendsToMigrateInsurance", "_issueDay"],
+        "expression": "intendsToMigrateInsurance === false && _issueDay !== undefined"
+```
+That means that field depends on two other fields "intendsToMigrateInsurance" and "_issueDay" and appears on the page only if expression string is evaluated as truthy. We need such dependencies array to be able to replace values in expression string with actual ones. That will also take care of `visibility` and `category` provided in schema definition or in the global options. When expression is falsy then element is hidden and won't be validated.
+
+
+
+### disabledExpression
+
+Almost the same as in expression definition above we should use dependencies array and disableExpression string. If evaluation of this string is truthy then elemend will be disabled, in no - enabled.
+
+
+### validationExpression
+Take a look above to undestand how expressions work. `validationExpression` is used for conditional validation. That only reflects on visual representation (if true then you will see validation icons, if false then no), but if the value invalid and validationExpression is set to true then you won't be able to procceed the form but still won't see validation errors.
+
+### conditional values
+Take a look above to undestand how expressions work.
+
+```javascript
+"conditionalValues": [
+            {"expression": "hasAutoIdentificationNumber === true", "value": false},
+            {"expression": "hasAutoIdentificationNumber === true && importAndCustomsCleared === true", "value": null}
+          ]
+          ```
+That means that if on of the expressions in conditionalValues array is truthy then model value will be set to value of relative expression.
+
 ### onChange
 The ```onChange``` option can be used with most fields and its value should be
 either an angular expression, as a string, or a function. If its an expression
@@ -387,23 +443,6 @@ Useful things in the decorators scope are
 | form           | The form definition for this field |
 
 
-### ngModelOptions
-Angular 1.3 introduces a new directive, *ngModelOptions*, which let's you set
-a couple of options that change how the directive *ng-model* works. Schema Form
-uses *ng-model* to bind against fields and therefore changing theses options
-might be usefule for you.
-
-One thing you can do is to change the update behavior of *ng-model*, this is how
-you get form fields that validate on blur instead of directly on change.
-
-Ex.
-```javascript
-{
-  key: "email",
-  ngModelOptions: { updateOn: 'blur' }
-}
-```
-
 See [Global Options](#global-options) for an example how you set entire form
 to validate on blur.
 
@@ -425,111 +464,7 @@ They do need a list of ```items``` to have as children.
 }
 ```
 
-### conditional
-
-A *conditional* is exactly the same as a *section*, i.e. a `<div>` with other form elements in
-it, hence they need an `items` property. They also need a `condition` which is
-a string with an angular expression. If that expression evaluates as thruthy the *conditional*
-will be rendered into the DOM otherwise not. The expression is evaluated in the parent scope of
-the `sf-schema` directive (the same as onClick on buttons) but with access to the current model
-and current array index under the name `model` and `arrayIndex`. This is useful for hiding/showing
-parts of a form depending on another form control.
-
-ex. A checkbox that shows an input field for a code when checked
-
-```javascript
-function FormCtrl($scope) {
-  $scope.person = {}
-
-  $scope.schema = {
-    "type": "object",
-    "properties": {
-      "name": {
-        "type": "string",
-        "title": "Name"
-      },
-      "eligible": {
-        "type": "boolean",
-        "title": "Eligible for awesome things"
-      },
-      "code": {
-        "type":"string"
-        "title": "The Code"
-      }
-    }
-  }
-
-  $scope.form = [
-    "name",
-    "eligible",
-    {
-        type: "conditional",
-        condition: "person.eligible", //or "model.eligable"
-        items: [
-          "code"
-        ]
-    }
-  ]
-}
-```
-Note that angulars two-way binding automatically will update the conditional block, no need for
-event handlers and such. The condition need not reference a model value it could be anything in
-scope.
-
-The same example, but inside an array:
-
-```javascript
-function FormCtrl($scope) {
-  $scope.persons = []
-
-  $scope.schema = {
-    "type": "object",
-    "properties": {
-      "persons": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            },
-            "eligible": {
-              "type": "boolean",
-              "title": "Eligible for awesome things"
-            },
-            "code": {
-              "type":"string"
-              "title": "The Code"
-            }
-          }
-        }
-      }
-    }
-  }
-
-  $scope.form = [
-    {
-      "key": "persons",
-      "items": [
-        "persons[].name",
-        "persons[].eligible",
-        {
-          type: "conditional",
-          condition: "persons[arrayIndex].eligible", //or "model.eligable"
-          items: [
-            "persons[].code"
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-
-Note that arrays inside arrays won't work with conditional.
-
-### select and checkboxes
+### select,dropdown and checkboxes
 
 *select* and *checkboxes* can take an attribute, `titleMap`, wich defines a name
 and a value. The value is bound to the model while the name is used for display.
@@ -733,255 +668,145 @@ function FormCtrl($scope) {
   ];
 }
 ```
+### customer
 
-### tabs
-The `tabs` form type lets you split your form into tabs. It is similar to
-`fieldset` in that it just changes the presentation of the form. `tabs`
-takes a option, also called `tabs`, that is a list of tab objects. Each tab
-object consist of a *title* and a *items* list of form objects.
+That is three fields to be honest but connected into one to provide easier way to validate user through events
 
-Ex.
+basic usage:
+
 ```javascript
-function FormCtrl($scope) {
-  $scope.schema = {
-    type: "object",
-    properties: {
-      name: {
-        title: "Name",
-        type: "string"
+  {
+    "type": "customer",
+    "items": [
+      {
+        "key": "providedPersonInfo.nin",
+        "itemType": "personNumber",
+        "title": "Fødselsnummer",
+        "infoMessage": "Fødselsnummeret ble oppgitt når du sjekket pris på produktet",
+        "placeholder": "Fødselsnummer",
+        "id": "someExample",
+        "schemaOverride": {
+          "type": "string",
+          "required": true,
+          "minLength": 11,
+          "maxLength": 11
+        }
       },
-      nick: {
-        title: "Nick",
-        type: "string"
-      }
-      alias: {
-        title: "Alias",
-        type: "string"
-      }
-      tag: {
-        title: "Tag",
-        type: "string"
-      }
-    }
-  };
-
-  $scope.form = [
-    "name",
-    {
-      type: "tabs",
-      tabs: [
-        {
-          title: "Tab 1",
-          items: [
-            "nick",
-            "alias"
-          ]
-        },
-        {
-          title: "Tab 2",
-          items: [
-            "tag"
-          ]
+      {
+        "key": "providedPersonInfo.name.firstName",
+        "itemType": "firstName",
+        "title": "Fornavn",
+        "validationMessage": "Vennligst fyll inn ditt fornavn",
+        "infoMessage": "Alle fornavn må fylles inn korrekt. Mellomnavn må ikke fylles inn",
+        "placeholder": "Fornavn",
+        "id": "another",
+        "schemaOverride": {
+          "type": "string",
+          "required": true
         }
-      ]
-    }
-  ];
-}
-```
-
-### array
-The `array` form type is the default for the schema type `array`.
-The schema for an array has the property `"items"` which in the JSON Schema
-specification can be either another schema (i.e. and object), or a list of
-schemas. Only a schema is supported by Schema Form, and not the list of schemas.
-
-The *form* definition has the option `items` that should be a list
-of form objects.
-
-The rendered list of subforms each have a *"Remove"* button and at the bottom there
-is an *"Add"* button. The default *"Add"* button has class btn-default and text Add. Both
-could be changed using attribute `add`, see example below.
-
-If you like to have drag and drop reordering of arrays you also need
-[ui-sortable](https://github.com/angular-ui/ui-sortable) and its dependencies
-[jQueryUI](http://jqueryui.com/), see *ui-sortable* documentation for details of
-what parts of jQueryUI that is needed. You can safely ignore these if you don't
-need the reordering.
-
-In the form definition you can refer to properties of an array item by the empty
-bracket notation. In the `key` simply end the name of the array with `[]`
-
-Given the schema:
-```json
-{
-  "type": "object",
-  "properties": {
-    "subforms": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "nick": { "type": "string" },
-          "emails": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
+      },
+      {
+        "key": "providedPersonInfo.name.lastName",
+        "itemType": "lastName",
+        "title": "Etternavn",
+        "validationMessage": "Vennligst fyll inn ditt etternavn",
+        "infoMessage": "Etternavnet ditt må fylles inn korrekt. Mellomnavn må ikke fylles inn",
+        "placeholder": "Etternavn",
+        "schemaOverride": {
+          "type": "string",
+          "required": true
+        }
+      },
+      {
+        "key": "_userInvalidMessage",
+        "itemType": "userError",
+        "validationMessage": "Navn og fødselsnummer stemmer ikke overens. Husk å fylle inn akkurat slik det er registrert i folkeregisteret. Mellomnavn må ikke inkluderes",
+        "type": "hidden",
+        "schemaOverride": {
+          "type": "string",
+          "required": true
         }
       }
-    }
+    ]
   }
-}
 ```
-Then `subforms[].name` refers to the property name of any subform item,
-`subforms[].emails[]` refers to the subform of emails. See example below for
-usage.
+This element emits `customer:validate` event when all three fields are set with such data `{
+                    ssn: personNumber,
+                    firstName: firstName,
+                    lastName: lastName
+                  })`
+Also it listens to the `customer:isValid` event for validation and error message showing and waits for such info
+`{isValid: boolean, firstName: 'corrected name', lastName: 'corrected last name'}`
+Corrected names can be same as sent ones but probably customer-master service will correct your spelling
 
 
-Single list of inputs example:
-```javascript
-function FormCtrl($scope) {
-  $scope.schema = {
-    type: "object",
-    properties: {
-      names: {
-        type: "array",
-        items: {
-          title: "Name",
-          type: "string"
-        }
-      }
-    }
-  };
 
-  $scope.form = ['*'];
-}
-```
+### dateinfo
 
+Date-info box is used for showing corrected date from datepicker for example.
 
-Example with sub form, note that you can get rid of the form field the object wrapping the
-subform fields gives you per default by using the `items` option in the
-form definition.
+It has complex logic and probably can be used only for insurances (old skade logic is under the hood)
+
+Basic usage:
 
 ```javascript
-function FormCtrl($scope) {
-  $scope.schema = {
-    "type": "object",
-    "properties": {
-      "subforms": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": { "type": "string" },
-            "nick": { "type": "string" },
-            "emails": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+{
+              "type": "infodate",
+              "modelKey": "issueDate",
+              "dateKey": "_expirationDateDay",
+              "maxMonthlyDifference": 2,
+              "minMonthlyDifference": 0,
+              "additionalMonthlyDifference": 1,
+              "additionalDailyDifference": 1,
+              "hasDefaultDateValue": true,
+              "encoding": "nn",
+              "format": "Do MMMM YYYY",
+              "staticMessage": "Forsikringen vil gjelde fra",
+              "dependencies": ["intendsToMigrateInsurance", "expirationDateKnown", "_expirationDateDay"],
+              "expression": "intendsToMigrateInsurance === true && expirationDateKnown === true &&  _expirationDateDay !== undefined"
             }
-          }
-        }
-      }
-    }
-  };
-
-
-  $scope.form = [
-    {
-      key: "subforms",
-      add: "Add person",
-      style: {
-		add: "btn-success"
-	  },
-      items: [
-        "subforms[].nick",
-        "subforms[].name",
-        "subforms[].emails",
-      ]
-    }
-  ];
-}
 ```
+Here `modelKey` - name of property which wll be persisted in the model, `dateKey` - key of source date in the model,
+`maxMonthlyDifference` - how many month for current can be set as the current insurance buying date,  `minMonthlyDifference` - oposite of `maxMonthlyDifference`, `additionalMonthlyDifference` - if source date is more than `maxMonthlyDifference` from the current date then `current date + additionalMonthlyDifference + additionalDailyDifference` will be set as modelValue.
 
+### datepicker
 
-### tabarray
-The `tabarray` form type behaves the same way and has the same options as
-`array` but instead of rendering a list it renders a tab per item in list.
+Basic usage: all the same as in other types but only `"format": "date"` should be set in schema definition for this field.
 
-By default the tabs are on the left side (follows the default in JSON Form),
-but with the option `tabType` you can change that to eiter *"top"* or *"right"*
-as well.
+### errorbox,infobox and successbox
 
-Every tab page has a *"Remove"* button. The default *"Remove"* button has class btn-default
-and text Remove. Both could be changed using attribute `remove`, see example below.
+Usage of all this element is basically the same.
+```javascript
+{
+              "type": "infobox || errorbox || successbox",
+              "infoMessage": "Det er ikke mulig å flytte forsikringen fra et annet selskap hvis bilen ikke har reg.nr, vennligst ta kontakt med kundeservice"
+            },
+```
+### whitebox
 
-In this case we have an *"Add"* link, not an *"Add"* button. Therefore, the attribute `add`
-only changes the text of the link. See example below.
-
-Bootstrap 3 doesn't have side tabs so to get proper styling you need to add the
-dependency [bootstrap-vertical-tabs](https://github.com/dbtek/bootstrap-vertical-tabs).
-It is not needed for tabs on top.
-
-The `title` option is a bit special in `tabarray`, it defines the title
-of the tab and is considered a angular expression. The expression is evaluated
-with two extra variables in context: **value** and **$index**, where **value**
-is the value in the array (i.e. that tab) and **$index** the index.
-
-Example with tabs on the top:
+It's only a wrapper with white background and 100% width. Also it inverts all white blocks into sand color blocks
 
 ```javascript
-function FormCtrl($scope) {
-  $scope.schema = {
-    "type": "object",
-    "properties": {
-      "subforms": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": { "type": "string" },
-            "nick": { "type": "string" },
-            "emails": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
+{
+          "type": "whitebox",
+          "items": [...]
           }
-        }
-      }
-    }
-  };
+          ```
+          
+### hidden
 
+This type is using when we should interrupt form processing with some error
 
-  $scope.form = [
-    {
-      type: "tabarray",
-      tabType: "top",
-      title: "value.nick || ('Tab '+$index)"
-      key: "subforms",
-      remove: "Delete",
-      style: {
-		remove: "btn-danger"
-	  },
-	  add: "Add person",
-      items: [
-        "subforms[].nick",
-        "subforms[].name",
-        "subforms[].emails",
-      ]
-    }
-  ];
-}
-```
-
-
-
-
+```javascript
+            {
+              "key": "_isNotAllowedToBuy",
+              "validationMessage": "Denne bilen kan dessverre ikke tegnes på nett, vennligst ta kontakt med kundeservice",
+              "type": "hidden",
+              "dependencies": ["importAndCustomsCleared"],
+              "expression": "importAndCustomsCleared === true"
+            }
+            ```
+It also should be required in the schema definition to interrupt processing
 
 Post process function
 ---------------------
