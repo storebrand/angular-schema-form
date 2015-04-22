@@ -55,47 +55,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         });
       });
 
-      var _minDate, _maxDate;
-
-      scope.$watch(scope.keyModelName, function() {
-        $timeout(function() {
-
-          if (!minDate.isValid()){
-            _minDate = scope.$eval(attrs.minDate);
-            if (_minDate && moment(_minDate).isValid()) {
-              minDate = moment(_minDate);
-              if (defaultDate < minDate){
-                defaultDate = minDate;
-              }
-              $(element).data('DateTimePicker').setMinDate(minDate);
-            }
-          }
-
-          if (!maxDate.isValid()){
-            _maxDate = scope.$eval(attrs.maxDate);
-            if (_maxDate && moment(_maxDate).isValid()) {
-              maxDate = moment(_maxDate);
-              if (defaultDate > maxDate){
-                defaultDate = maxDate;
-              }
-              $(element).data('DateTimePicker').setMaxDate(maxDate);
-            }
-          }
-
-          var viewValue = ngModelCtrl.$viewValue;
-          var isMaxDateSelected = maxDate.diff(viewValue, 'days') === 0;
-          var isMinDateSelected = minDate.diff(viewValue, 'days') === 0;
-
-          if (showTime){
-            setTimepickerRestrictions(isMaxDateSelected && maxTime, isMinDateSelected && minTime);
-          }
-
-          if (viewValue){
-            var viewDate = toDotDateFormat(viewValue);
-            $(element).data('DateTimePicker').setDate(viewDate);
-          }
-        });
-      });
+      scope.$watch('model', setDatepickerRestrictions);
+      scope.$watch(scope.keyModelName, setDatepickerValue);
 
       if (showTime){
         initTimepicker();
@@ -113,10 +74,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       function toIsoFormat(date, time){
         return moment(date, 'DD.MM.YY').format('YYYY-MM-DD') +
                 (showTime ? ('T'+moment(time, 'HH:mm').format('HH:mm:ss')) : '');
-      }
-
-      function toDotDateFormat(date){
-        return moment(date).format('DD.MM.YY');
       }
 
       function formatTime(time){
@@ -176,6 +133,51 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
 
         scope.selectedTime = isInMaxTimeRange && isInMinTimeRange ? getViewTime() :
           calculateDefaultTime(ngModelCtrl.$viewValue);
+      }
+
+      function setDatepickerRestrictions() {
+        $timeout(function() {
+          if (!minDate.isValid()){
+            var _minDate = scope.$eval(attrs.minDate);
+            if (_minDate && moment(_minDate).isValid()) {
+              minDate = moment(_minDate);
+              if (defaultDate < minDate){
+                defaultDate = minDate;
+              }
+              $(element).data('DateTimePicker').setMinDate(minDate);
+            }
+          }
+
+          if (!maxDate.isValid()){
+            var _maxDate = scope.$eval(attrs.maxDate);
+            if (_maxDate && moment(_maxDate).isValid()) {
+              maxDate = moment(_maxDate);
+              if (defaultDate > maxDate){
+                defaultDate = maxDate;
+              }
+              $(element).data('DateTimePicker').setMaxDate(maxDate);
+            }
+          }
+        });
+      }
+
+      function setDatepickerValue() {
+        $timeout(function() {
+          var viewValue = moment(ngModelCtrl.$viewValue, 'YYYY-MM-DD');
+
+          var isMaxDateSelected = maxDate.diff(viewValue, 'days') === 0;
+          var isMinDateSelected = minDate.diff(viewValue, 'days') === 0;
+
+          if (showTime){
+            setTimepickerRestrictions(isMaxDateSelected && maxTime, isMinDateSelected && minTime);
+          }
+
+          if (viewValue.isValid()){
+            var viewDate = viewValue.format('DD.MM.YY');
+            $(element).data('DateTimePicker').setDate(viewDate);
+          }
+
+        });
       }
 
     }
