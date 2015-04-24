@@ -218,6 +218,8 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               if (form) {
                 scope.form  = form;
+                scope.form.ngModelOptions = {updateOn: 'blur'};
+
                 scope.defaultGlobals = defaultGlobals;
 
                 //ok let's replace that template!
@@ -1344,7 +1346,7 @@ angular.module('schemaForm').factory('sfValidator', [function() {
    */
 
   validator.validate = function(form, value) {
-
+console.log('validate!!!')
     var schema = form.schema;
 
     if (!schema) {
