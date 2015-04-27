@@ -67,7 +67,6 @@ angular.module('schemaForm').factory('sfValidator', [function() {
    */
 
   validator.validate = function(form, value) {
-console.log('validate!!!')
     var schema = form.schema;
 
     if (!schema) {
