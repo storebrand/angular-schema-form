@@ -1,56 +1,54 @@
-<div class="datePickerWrapper">
-    <div class="stb-form-group date-picker"  ng-show="showCondition()">
-        <div class="label-wrapper">
-            <label ng-show="showTitle()">{{form.title}}<span class="sub">{{form.subtitle}}</span></label>
-            <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
-        </div>
+<div class="stb-form-group date-picker" ng-show="showCondition()">
+    <div class="label-wrapper">
+        <label ng-show="showTitle()">{{form.title}}<span class="sub">{{form.subtitle}}</span></label>
+        <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
+    </div>
 
+    <span class="help-block has-error" ng-show="!disabledElement() && hasError()">
+        <small class="help-block">
+            <span class="stb-color-sprite-small warning circle"></span>
+            <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
+        </small>
+    </span>
 
-        <span class="help-block has-error" ng-show="!disabledElement() && hasError()">
-            <small class="help-block">
-                <span class="stb-color-sprite-small warning circle"></span>
-                <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
-            </small>
-        </span>
-
-        <div class="stb-form-group al dateContainer" ng-class="{'has-error': !disabledElement() && hasError(),
+    <div class="stb-form-group al" ng-class="{'has-error': !disabledElement() && hasError(),
                     'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(),
                     'has-feedback': form.feedback !== false }">
-            <div
-              stb-datepicker
-              ng-model="$$value$$"
-              schema-validate="form"
-              class='input-group date datePicker'
-              events="form.events"
-              show-time="{{form.showTime}}"
-              min-date="{{form.minDate}}"
-              max-date="{{form.maxDate}}"
-              disable-until-today="form.disableUntilToday"
-              monthly-difference="form.monthlyDifference"
-              data-date-format="DD/MM/YYYY">
-                <input ng-show="form.key"
-                       placeholder="{{form.placeholder}}"
-                       type="text"
-                       class="form-control" />
+        <div
+                stb-datepicker
+                ng-model="$$value$$"
+                schema-validate="form"
+                class='input-group date datePicker'
+                events="form.events"
+                show-time="{{form.showTime}}"
+                min-date="{{form.minDate}}"
+                max-date="{{form.maxDate}}"
+                disable-until-today="form.disableUntilToday"
+                monthly-difference="form.monthlyDifference"
+                data-date-format="DD/MM/YYYY">
+            <input ng-show="form.key"
+                   placeholder="{{form.placeholder}}"
+                   type="text"
+                   class="form-control"/>
                 <span class="input-group-addon stbcolor-secondary third">
                     <span class="stb-sprite-small white calendar"></span>
                 </span>
-                <div ng-show="form.showTime" class="stb-form-group select timepicker">
-                  <select class="form-control"
-                          ng-change="selectedTimeChanged()"
-                          ng-model="selectedTime">
-                    <option ng-repeat="timeOption in timeOptions"
-                            id="{{timeOption.value}}"
-                            ng-disabled="!!timeOption.isDisabled">
-                      {{timeOption.value}}
-                    </option>
-                  </select>
-                </div>
-                <i class="form-control-feedback glyphicon"
-                   ng-show="hasSuccess() || hasError()"
-                   ng-class="{'glyphicon-remove': !disabledElement() && hasError(),
+
+            <i class="form-control-feedback glyphicon"
+               ng-show="hasSuccess() || hasError()"
+               ng-class="{'glyphicon-remove': !disabledElement() && hasError(),
                       'glyphicon-ok': !disabledElement() && hasSuccess()}"></i>
-            </div>
+        </div>
+        <div ng-show="form.showTime" class="stb-form-group select timepicker">
+            <select class="form-control"
+                    ng-change="selectedTimeChanged()"
+                    ng-model="selectedTime">
+                <option ng-repeat="timeOption in timeOptions"
+                        id="{{timeOption.value}}"
+                        ng-disabled="!!timeOption.isDisabled">
+                    {{timeOption.value}}
+                </option>
+            </select>
         </div>
     </div>
 </div>

@@ -116,6 +116,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
             });
           });
         }
+
+        element.addClass('has-timepicker');
       }
 
       function setTimepickerRestrictions(maxTimeOption, minTimeOption){
