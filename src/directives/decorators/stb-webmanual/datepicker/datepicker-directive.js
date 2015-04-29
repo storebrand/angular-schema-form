@@ -63,6 +63,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         scope.selectedTimeChanged = function(){
           ngModelCtrl.$setViewValue(getInputsDateTime());
         };
+      } else {
+        element.addClass('no-timepicker');
       }
 
       /* --- function is used to set model's viewValue --- */
@@ -116,6 +118,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
             });
           });
         }
+
+        element.addClass('has-timepicker');
       }
 
       function setTimepickerRestrictions(maxTimeOption, minTimeOption){
