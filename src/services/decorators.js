@@ -80,7 +80,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               if (form) {
                 scope.form  = form;
-                scope.form.ngModelOptions = {updateOn: 'blur'};
 
                 scope.defaultGlobals = defaultGlobals;
 
