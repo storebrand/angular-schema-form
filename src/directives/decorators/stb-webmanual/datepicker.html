@@ -33,11 +33,6 @@
                 <span class="input-group-addon stbcolor-secondary third">
                     <span class="stb-sprite-small white calendar"></span>
                 </span>
-
-            <i class="form-control-feedback glyphicon"
-               ng-show="hasSuccess() || hasError()"
-               ng-class="{'glyphicon-remove': !disabledElement() && hasError(),
-                      'glyphicon-ok': !disabledElement() && hasSuccess()}"></i>
         </div>
         <div ng-show="form.showTime" class="stb-form-group select timepicker">
             <select class="form-control"
@@ -50,5 +45,9 @@
                 </option>
             </select>
         </div>
+        <i class="form-control-feedback glyphicon"
+           ng-show="hasSuccess() || hasError()"
+           ng-class="{'glyphicon-remove': !disabledElement() && hasError(),
+                      'glyphicon-ok': !disabledElement() && hasSuccess()}"></i>
     </div>
 </div>
