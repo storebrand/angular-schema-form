@@ -61,7 +61,9 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       if (showTime){
         initTimepicker();
         scope.selectedTimeChanged = function(){
-          ngModelCtrl.$setViewValue(getInputsDateTime());
+          if(ngModelCtrl.$modelValue) {
+            ngModelCtrl.$setViewValue(getInputsDateTime());
+          }
         };
       } else {
         element.addClass('no-timepicker');
