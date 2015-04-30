@@ -80,6 +80,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               if (form) {
                 scope.form  = form;
+
                 scope.defaultGlobals = defaultGlobals;
 
                 //ok let's replace that template!

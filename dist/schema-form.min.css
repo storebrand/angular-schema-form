@@ -290,6 +290,12 @@ form .stb-form-group input {
   max-width: 100%;
   min-width: 100px;
 }
+fieldset.framed {
+  border-width: 1px;
+  border-style: solid;
+  padding: 15px;
+  margin-bottom: 24px;
+}
 /****************************************/
 /***********TABLES ADAPTIVE**************/
 /****************************************/

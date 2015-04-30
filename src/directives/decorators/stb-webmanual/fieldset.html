@@ -1,4 +1,4 @@
-<fieldset ng-disabled="form.readonly">
+<fieldset ng-disabled="form.readonly" ng-class="{framed: form.framed}">
     <h3 ng-show="form.title">{{ form.title }}</h3>
   <sf-decorator ng-repeat="item in form.items" form="item"></sf-decorator>
 </fieldset>
