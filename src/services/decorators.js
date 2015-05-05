@@ -403,17 +403,16 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 modelExpression.assign(scope, getModel());
               };
               uploader.onSuccessItem = function(item, response) {
-
-                var responseData = response;
-                if (angular.isString(response) && (/^<pre>/).test(response))
-                {
-                  var data = response.replace(/<\/?pre>/ig, '');
-                  responseData = angular.fromJson(data);
+                if (angular.isString(response)) {
+                  if ((/^<pre>/).test(response)) {
+                    response = response.replace(/<\/?pre>/ig, '');
+                  }
+                  response = angular.fromJson(response);
                 }
 
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
-                    $.extend(modelItem, responseData);
+                    $.extend(modelItem, response);
                     modelExpression.assign(scope, getModel());
                     return true;
                   }
