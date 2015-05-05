@@ -46,10 +46,10 @@ label.empty-view {
 .stb-form-group {
   display: inline-block;
 }
+.stb-form-group.checkboxes,
 .stb-form-group.radios {
   display: block;
 }
-.stb-form-group.checkboxes,
 .stb-form-group.radios-inline,
 .stb-form-group.date-picker,
 .stb-form-group.select-wrapper {
