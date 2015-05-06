@@ -17,6 +17,9 @@ label.empty-view {
   width: 40px;
   height: 40px;
 }
+.checkboxes label div.within-label {
+  display: inline;
+}
 .label-wrapper label {
   display: inline;
   font-family: "open sans bold";
