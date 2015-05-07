@@ -567,7 +567,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   return false;
                 });
               };
-
               uploader.onWhenAddingFileFailed = function(item, error) {
                 scope.fileUploadError = scope.fileUploadError || {};
                 scope.fileUploadError.title = error.title;
@@ -631,6 +630,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               }
             };
 
+            scope.$on('schemaFormValidationClean', function () {
+              scope.fileUploadError = null;
+            });
           }
         };
       }
@@ -1825,6 +1827,8 @@ angular.module('schemaForm')
 ]);
 
 angular.module('schemaForm').directive('schemaValidate', ['sfValidator', function (sfValidator) {
+  'use strict';
+
   return {
     restrict: 'A',
     scope: false,
@@ -1953,6 +1957,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
           element[0].value = ''; //clean input value
           ngModel.$setViewValue(undefined); //clean view value
           ngModel.$setPristine(); //add class ng-pristine and remove ng-dirty, removes error message and styling
+          ngModel.$render();
         }
       });
 

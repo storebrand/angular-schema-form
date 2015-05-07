@@ -429,7 +429,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   return false;
                 });
               };
-
               uploader.onWhenAddingFileFailed = function(item, error) {
                 scope.fileUploadError = scope.fileUploadError || {};
                 scope.fileUploadError.title = error.title;
@@ -493,6 +492,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               }
             };
 
+            scope.$on('schemaFormValidationClean', function () {
+              scope.fileUploadError = null;
+            });
           }
         };
       }
