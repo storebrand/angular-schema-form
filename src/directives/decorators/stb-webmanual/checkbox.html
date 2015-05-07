@@ -1,3 +1,5 @@
+<!-- THIS CHECKBOX WE USE IN DC-CLIENT -->
+
 <div class="stb-form-group checkboxes" ng-show="showCondition()">
     <div ng-if="!form.emptyView"
          class="help-block info-message has-error"
@@ -15,7 +17,16 @@
                ng-model-options="form.ngModelOptions"
                schema-validate="form"
                class="stb-checkbox">
-        <label ng-if="!form.emptyView" ng-class="{'non-empty-view': !form.emptyView}" ng-click="clickCheckbox($event)"><span></span>{{form.title}}</label>
+        <label ng-if="!form.emptyView"
+               ng-class="{'non-empty-view': !form.emptyView}"
+               ng-click="clickCheckbox($event)"><span></span>
+                <div class="within-label" ng-class="{'hidden-xs': form.titleShort}">
+                    {{form.title}}
+                </div>
+                <div class="within-label" ng-class="{'visible-xs-inline': form.titleShort}">
+                    {{form.titleShort}}
+                </div>
+        </label>
         <label ng-if="form.emptyView" ng-class="{'empty-view': form.emptyView}" ng-click="clickCheckbox($event)"><span></span></label>
     </div>
 
