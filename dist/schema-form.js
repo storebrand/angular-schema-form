@@ -1827,6 +1827,8 @@ angular.module('schemaForm')
 ]);
 
 angular.module('schemaForm').directive('schemaValidate', ['sfValidator', function (sfValidator) {
+  'use strict';
+
   return {
     restrict: 'A',
     scope: false,
@@ -1955,6 +1957,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
           element[0].value = ''; //clean input value
           ngModel.$setViewValue(undefined); //clean view value
           ngModel.$setPristine(); //add class ng-pristine and remove ng-dirty, removes error message and styling
+          ngModel.$render();
         }
       });
 
