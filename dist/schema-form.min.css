@@ -49,10 +49,10 @@ label.empty-view {
 .stb-form-group {
   display: inline-block;
 }
+.stb-form-group.checkboxes,
 .stb-form-group.radios {
   display: block;
 }
-.stb-form-group.checkboxes,
 .stb-form-group.radios-inline,
 .stb-form-group.date-picker,
 .stb-form-group.select-wrapper {
@@ -292,6 +292,12 @@ form .stb-form-group,
 form .stb-form-group input {
   max-width: 100%;
   min-width: 100px;
+}
+fieldset.framed {
+  border-width: 1px;
+  border-style: solid;
+  padding: 15px;
+  margin-bottom: 24px;
 }
 /****************************************/
 /***********TABLES ADAPTIVE**************/

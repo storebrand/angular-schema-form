@@ -218,6 +218,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               if (form) {
                 scope.form  = form;
+
                 scope.defaultGlobals = defaultGlobals;
 
                 //ok let's replace that template!
@@ -1351,7 +1352,6 @@ angular.module('schemaForm').factory('sfValidator', [function() {
    */
 
   validator.validate = function(form, value) {
-
     var schema = form.schema;
 
     if (!schema) {
