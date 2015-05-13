@@ -608,7 +608,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               };
 
               scope.confirmOnFileRemove = function(item){
-                if (scope.form.confirmDelete){
+                if (scope.form.confirmDelete && !item.uploaderFileItem.isError){
                   scope.params.submit = angular.bind({}, scope.removeFile, item);
                 } else {
                   scope.removeFile(item);

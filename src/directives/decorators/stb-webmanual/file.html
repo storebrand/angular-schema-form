@@ -15,8 +15,8 @@
 
             <span
               class="delete"
-              ng-attr-data-toggle="{{'modal'}}"
-              ng-attr-data-target="#{{params.id}}"
+              ng-attr-data-toggle="{{item.uploaderFileItem && item.uploaderFileItem.isError ? '' : 'modal'}}"
+              ng-attr-data-target="#{{item.uploaderFileItem && item.uploaderFileItem.isError ? '' : params.id}}"
               ng-click="confirmOnFileRemove(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>
         </li>
     </ul>
