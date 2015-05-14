@@ -15,7 +15,11 @@ angular.module('schemaForm').factory('sfValidator', [function() {
       var i=0;
 
       if (typeof data === 'string') {
-        pn = data.split('');
+        if (/^(\d{11})$/.test(data)){
+          pn = data.split('');
+        } else {
+          return 'ssn should contain only 11 digits';
+        }
       } else {
         return 'ssn should be a string!';
       }
