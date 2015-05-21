@@ -81,7 +81,9 @@ angular.module('schemaForm').factory('sfValidator', [function() {
     //Type cast and validate against schema.
     //Basic types of json schema sans array and object
     if (schema.type === 'integer') {
-      value = (/^(\-|\+)?([0-9]+)$/.test(value.trim())) ? parseInt(value, 10) : NaN;
+      value = (value && ((typeof value === 'string' && /^(\-|\+)?([0-9]+)$/.test(value.trim())) || typeof value !== 'string'))
+        ? parseInt(value, 10)
+        : NaN;
     } else if (schema.type === 'number') {
       value = parseFloat(value, 10);
     } else if (schema.type === 'boolean' && typeof value === 'string') {
