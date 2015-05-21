@@ -32,10 +32,4 @@ try {
   deps.push('angularFileUpload');
 } catch (e) {}
 
-try {
-  //This throws an expection if module does not exist.
-  angular.module('ng.shims.placeholder');
-  deps.push('ng.shims.placeholder');
-} catch (e) {}
-
 angular.module('schemaForm', deps);
