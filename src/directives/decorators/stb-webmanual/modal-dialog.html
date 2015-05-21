@@ -1,23 +1,25 @@
-<div class="modal stb-modal fade" id="{{params.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+<div ng-show="confirmDlgParams.visible">
+  <div class="modal stb-modal fade ng-scope in" tabindex="-1" role="dialog" aria-hidden="false" style="display: block">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header stbcolor-primary first lighter">
-                <a class="pull-right closeLink" data-dismiss="modal" href="#" ng-click="params.cancel()">
-                    <p>Lukk <span class="stb-sprite-small remove"></span></p>
-                </a>
-                <h4 class="modal-title"><span class="stb-color-sprite-medium warning"></span></h4>
-            </div>
-            <div class="modal-body">
-                <h3 class="modal-heading">{{params.texts.title}}</h3>
-                <button
-                    class="stb-btn alarm"
-                    ng-click="params.submit()"
-                    data-dismiss="modal">{{params.texts.submit}}</button>
-                <button
-                    class="stb-btn transparent light"
-                    ng-click="params.cancel()"
-                    data-dismiss="modal">{{params.texts.cancel}}</button>
-            </div>
-        </div>
+      <div class="modal-content">
+          <div class="modal-header stbcolor-primary first lighter">
+            <a class="pull-right closeLink" data-dismiss="modal" href="#" ng-click="confirmDlgParams.visible = false">
+                <p>Lukk <span class="stb-sprite-small remove"></span></p>
+            </a>
+            <h4 class="modal-title"><span class="stb-color-sprite-medium warning"></span></h4>
+          </div>
+          <div class="modal-body">
+            <h3 class="modal-heading">{{confirmDlgParams.texts.title}}</h3>
+            <button
+                class="stb-btn alarm"
+                ng-click="confirmDlgParams.submit(); confirmDlgParams.visible = false"
+                data-dismiss="modal">{{confirmDlgParams.texts.submit}}</button>
+            <button
+                class="stb-btn transparent light"
+                ng-click="confirmDlgParams.cancel(); confirmDlgParams.visible = false"
+                data-dismiss="modal">{{confirmDlgParams.texts.cancel}}</button>
+          </div>
+      </div>
     </div>
+  </div>
 </div>

@@ -1,6 +1,6 @@
 <div  class="form-group uploader label-wrapper"
       ng-show="showCondition()"
-      ng-init="initFileUploader(); params={id: form.key+'ModalDlg', submit: removeFile, texts: form.confirmDelete.texts}">
+      ng-init="initFileUploader(); confirmDlgParams={submit: removeFile, texts: form.confirmDelete.texts}">
 
     <ul class="filetable" ng-if="$$value$$">
         <li class="file" ng-repeat="item in $$value$$" ng-init="fileName = item.fileName; extension=getExtensionFromFileName(fileName)">
@@ -15,8 +15,6 @@
 
             <span
               class="delete"
-              ng-attr-data-toggle="{{'modal'}}"
-              ng-attr-data-target="#{{params.id}}"
               ng-click="confirmOnFileRemove(item)"><span class="stb-sprite-small remove red"></span>Fjern</span>
         </li>
     </ul>
@@ -36,11 +34,6 @@
     <label for="{{form.key}}" class="link">{{form.title}}</label>
     <span ng-style="{float: 'right', display: $$value$$.length ? 'none' : 'inline'}">{{form.initTitle}}</span>
 
-    <span ng-show="!!form.confirmDelete">
-        <div
-            sf-modal-dialog
-            params="params">
-        </div>
-    </span>
+    <div sf-modal-dialog></div>
 
 </div>
