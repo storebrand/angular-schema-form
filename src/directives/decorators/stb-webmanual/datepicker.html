@@ -35,15 +35,17 @@
                 </span>
         </div>
         <div ng-show="form.showTime" class="stb-form-group select timepicker">
-            <select class="form-control"
-                    ng-change="selectedTimeChanged()"
-                    ng-model="selectedTime">
-                <option ng-repeat="timeOption in timeOptions"
-                        id="{{timeOption.value}}"
-                        ng-disabled="!!timeOption.isDisabled">
-                    {{timeOption.value}}
-                </option>
-            </select>
+            <div class="stb-select">
+                <select class="form-control"
+                        ng-change="selectedTimeChanged()"
+                        ng-model="selectedTime">
+                    <option ng-repeat="timeOption in timeOptions"
+                            id="{{timeOption.value}}"
+                            ng-disabled="!!timeOption.isDisabled">
+                        {{timeOption.value}}
+                    </option>
+                </select>
+            </div>
         </div>
         <i class="form-control-feedback glyphicon"
            ng-show="hasSuccess() || hasError()"
