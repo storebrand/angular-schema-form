@@ -619,11 +619,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               };
             };
 
-
-
             scope.confirmOnClick = function(index){
-              // console.log('scope', scope);
-
               var form = scope.form;
               var action = this.action;
 
@@ -634,11 +630,10 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   visible : true,
                   texts   : form.confirmDelete.texts,
                   submit  : angular.bind({}, form.confirmDelete.events.submit, modelData, index),
-                  cancel  : angular.bind({}, form.confirmEdit.events.cancel, modelData, index)
+                  cancel  : angular.bind({}, form.confirmDelete.events.cancel, modelData, index)
                 };
 
               } else if ( action.type === 'edit' && form.confirmEdit && form.confirmEdit.events.confirm() ){
-
                 scope.confirmDlgParams = {
                   visible : true,
                   texts   : form.confirmEdit.texts,
