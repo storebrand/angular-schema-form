@@ -383,6 +383,19 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               return 'Required';
             };
 
+            scope.extsWithIcons = {
+              excel           : ['xls', 'xlsx'],
+              powerpoint      : ['ppt', 'pptx'],
+              pdf             : ['pdf'],
+              word            : ['doc', 'docx', 'wpd', 'rtf']
+              // TODO if have icons
+              // openOffice      : ['odt', 'ods', 'odp'],
+              // docs            : ['txt'],
+              // images          : ['jpeg', 'jpg', 'png', 'bmp', 'tif', 'tiff']
+            };
+
+            scope.allExtsWithIcons = _.chain(scope.extsWithIcons).values().flatten().value();
+
             scope.initFileUploader = function () {
               var modelExpression = $parse(scope.keyModelName);
               var getModel = function() {

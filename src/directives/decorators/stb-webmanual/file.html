@@ -3,9 +3,19 @@
       ng-init="initFileUploader(); confirmDlgParams={submit: removeFile, texts: form.confirmDelete.texts}">
 
     <ul class="filetable" ng-if="$$value$$">
-        <li class="file" ng-repeat="item in $$value$$" ng-init="fileName = item.fileName; extension=getExtensionFromFileName(fileName)">
+        <li class="file"
+            ng-repeat="item in $$value$$"
+            ng-init="fileName = item.fileName; extension=getExtensionFromFileName(fileName).toLowerCase()">
             <span class="icon">
-                <span class="" ng-bind="extension" ng-class="{ 'stb-color-sprite-small': (extension === 'pdf'), pdf: (extension === 'pdf') }"></span>
+                <span ng-bind="extension"
+                      ng-class="{
+                        'stb-color-sprite-medium' : (allExtsWithIcons.indexOf(extension) !== -1),
+                        pdf        : (extsWithIcons.pdf.indexOf(extension) !== -1 ),
+                        word       : (extsWithIcons.word.indexOf(extension) !== -1 ),
+                        powerpoint : (extsWithIcons.powerpoint.indexOf(extension) !== -1 ),
+                        excel      : (extsWithIcons.excel.indexOf(extension) !== -1 )
+                      }">
+                </span>
             </span>
             <span class="filename" ng-bind="fileName"></span>
 

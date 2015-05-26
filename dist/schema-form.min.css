@@ -231,7 +231,10 @@ form .col-md-12 {
   color: #da291c;
   cursor: pointer;
 }
-.uploader .pdf {
+.uploader .pdf,
+.uploader .word,
+.uploader .excel,
+.uploader .powerpoint {
   color: transparent;
 }
 .selectContainer {
