@@ -1,6 +1,4 @@
-<div  ng-show="$$value$$ && $$value$$.length && showCondition()"
-      ng-init="params = {id: form.key+'ModalDlg', submit: form.confirmDelete.events.submit, texts: form.confirmDelete.texts}">
-
+<div  ng-show="$$value$$ && $$value$$.length && showCondition()" ng-init="confirmDlgParams={}">
     <div class="table-adaptive">
         <div class="table-header">
             <div class="table-column-titles"            ng-repeat="item in form.columnTitles">{{item}}</div>
@@ -17,8 +15,6 @@
                                      red : action.type === 'delete',
                                      pencil : action.type === 'edit' }"></span>
                     <a ng-class="{ deleteLink : action.type === 'delete'}"
-                       ng-attr-data-toggle="{{ action.type === 'delete' ? 'modal' : ''}}"
-                       ng-attr-data-target="{{ action.type === 'delete' ? ('#'+params.id) : ''}}"
                        ng-click="confirmOnClick($parent.$index)"
                        ng-bind="action.title"></a>
                 </div>
@@ -27,8 +23,4 @@
     </div>
 </div>
 
-<span ng-show="!!form.confirmDelete">
-  <div sf-modal-dialog
-       params="params">
-  </div>
-</span>
+<div sf-modal-dialog></div>

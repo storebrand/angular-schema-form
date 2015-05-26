@@ -355,6 +355,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
              * An error can either be a schema validation message or a angular js validtion
              * error (i.e. required)
              */
+
             scope.errorMessage = function(schemaError) {
               var validationMessage = scope.form.validationMessage;
               //User has supplied validation messages
@@ -471,22 +472,41 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               scope.confirmOnFileRemove = function(item){
                 if (scope.form.confirmDelete && !item.uploaderFileItem.isError){
-                  scope.params.submit = angular.bind({}, scope.removeFile, item);
+                  scope.confirmDlgParams.visible = true;
+                  scope.confirmDlgParams.submit = angular.bind({}, scope.removeFile, item);
                 } else {
                   scope.removeFile(item);
                 }
               };
             };
 
+
+
             scope.confirmOnClick = function(index){
-              var delEvents = (scope.form.confirmDelete || {}).events || {};
+              // console.log('scope', scope);
+
+              var form = scope.form;
               var action = this.action;
 
-              /* who cares if cb doesn't need it */
-              var modelData = [];
+              var modelData = []; /* who cares if cb doesn't need it */
 
               if ( action.type === 'delete' && scope.form.confirmDelete ) {
-                scope.params.submit = angular.bind({}, delEvents.submit, modelData, index);
+                scope.confirmDlgParams = {
+                  visible : true,
+                  texts   : form.confirmDelete.texts,
+                  submit  : angular.bind({}, form.confirmDelete.events.submit, modelData, index),
+                  cancel  : angular.bind({}, form.confirmEdit.events.cancel, modelData, index)
+                };
+
+              } else if ( action.type === 'edit' && form.confirmEdit && form.confirmEdit.events.confirm() ){
+
+                scope.confirmDlgParams = {
+                  visible : true,
+                  texts   : form.confirmEdit.texts,
+                  submit  : angular.bind({}, form.confirmEdit.events.submit, modelData, index),
+                  cancel  : angular.bind({}, form.confirmEdit.events.cancel, modelData, index)
+                };
+
               } else {
                 action.action(modelData, index);
               }
