@@ -1,9 +1,10 @@
 /*  Common code for validating a value against its form and schema definition */
 /* global tv4 */
 angular.module('schemaForm').factory('sfValidator', [function() {
+  'use strict';
 
   var validator = {};
-
+  var formData = {};
 
   tv4.addFormat({
     'ssn': function (data, schema) {
@@ -45,7 +46,6 @@ angular.module('schemaForm').factory('sfValidator', [function() {
         return 'email should be a string!';
       }
     },
-
     'date-format': function(data, schema) {
       if (typeof data === 'string') {
         if (Date.parse(data)) {
@@ -56,8 +56,10 @@ angular.module('schemaForm').factory('sfValidator', [function() {
       } else {
         return 'date should be ISO string!';
       }
+    },
+    'confirmation': function(data, schema){
+      return formData[schema.compareTo] === data ? null : 'wrong confirmation';
     }
-
   });
 
   /**
@@ -69,7 +71,6 @@ angular.module('schemaForm').factory('sfValidator', [function() {
    * @param {Any} value the value to validate.
    * @return a tv4js result object.
    */
-
   validator.validate = function(form, value) {
     var schema = form.schema;
 
@@ -100,6 +101,7 @@ angular.module('schemaForm').factory('sfValidator', [function() {
     var wrap = {type: 'object', 'properties': {}};
     var propName = form.key[form.key.length - 1];
     wrap.properties[propName] = schema;
+    formData[propName] = value;
 
     if (schema.required) {
       wrap.required = [propName];
