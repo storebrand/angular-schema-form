@@ -1666,10 +1666,8 @@ angular.module('schemaForm').directive('placeholder', function() {
   }
 
   return {
-      scope: true,
       replace: false,
       restrict: 'A',
-      transclude: true,
       link: function(scope, element) {
         var placeholder = scope.$eval(element.attr('placeholder').replace(/[\{,\}]/g, ''));
         var clonedEl = element.clone().val(placeholder).css('color', '#ccc');
