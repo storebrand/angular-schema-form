@@ -1674,21 +1674,21 @@ angular.module('schemaForm').directive('placeholder', function() {
       transclude: true,
       link: function(scope, element) {
         var placeholder = scope.$eval(element.attr('placeholder').replace(/[\{,\}]/g, ''));
-        var clonedEl = element.clone().val(placeholder).css('color', '#ccc');
+        var clonedEl = element.clone().addClass('placeholder-text').val(placeholder);
 
         clonedEl
           .focus(function() {
-            clonedEl.css('display', 'none');
-            element.css('display', 'block').focus();
+            clonedEl.addClass('hidden');
+            element.removeClass('hidden').focus();
           });
 
         element
-          .css('display', 'none')
+          .addClass('hidden')
           .after(clonedEl)
           .blur(function() {
             if (!element.val()) {
-              clonedEl.val(placeholder).css('display', 'block');
-              element.css('display', 'none');
+              clonedEl.val(placeholder).removeClass('hidden');
+              element.addClass('hidden');
             }
           });
 
