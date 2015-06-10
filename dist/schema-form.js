@@ -382,7 +382,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   model.assign(scope, conditionalValue);
                 }
 
-              } else if (scope.form.key && !show) {
+              } else if (scope.form.key && !show && !scope.form.keepModelValue) {
 
                 model.assign(scope, undefined);
                 if (scope.ngModelHolder) {
