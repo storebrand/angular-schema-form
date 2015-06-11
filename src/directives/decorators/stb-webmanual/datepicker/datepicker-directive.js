@@ -36,7 +36,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
 
       var defaultDate = attrs.defaultDate;
 
-      var name = scope.$eval(attrs.name).pop();
+      var name = _.last(scope.$eval(attrs.name));
 
       scope.timeOptions = [];
 
