@@ -13,11 +13,9 @@
     <div class="stb-form-group" ng-class="{'has-error': !disabledElement() && hasError(), 'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(), 'has-feedback': form.feedback !== false }">
         <input type="{{form.formType || 'text'}}"
                ng-show="form.key"
-               type="{{form.type}}"
                placeholder="{{form.placeholder}}"
                sf-changed="form"
                id="{{form.id}}"
-               placeholder="{{form.placeholder}}"
                ng-model-options="modelOptions"
                ng-model-onblur
                formatter-name="form.formatterName"
