@@ -36,6 +36,9 @@ label.empty-view {
 .input-group.datePicker {
   width: 260px;
 }
+.input-group.datePicker .placeholder-text {
+  color: #ccc;
+}
 .input-group.datePicker input {
   min-width: 100px;
   background-color: white;
@@ -45,6 +48,9 @@ label.empty-view {
 }
 .input-group.datePicker .glyphicon-calendar:before {
   content: '';
+}
+.has-success .input-group.datePicker .placeholder-text {
+  color: #555;
 }
 .stb-form-group {
   display: inline-block;
