@@ -260,6 +260,19 @@ form .col-md-12 {
 .stb-form-group.select {
   display: block;
 }
+.stb-form-group.currency input {
+  display: inline;
+  width: 300px !important;
+}
+.stb-form-group.currency .select {
+  width: 105px;
+  margin-right: 10px;
+  display: inline;
+  float: left;
+}
+.stb-form-group.currency .select select {
+  padding-right: 15px;
+}
 .command-panel .stb-btn {
   margin-right: 12px;
 }

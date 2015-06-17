@@ -1,0 +1,49 @@
+<div ng-show="showCondition()" ng-init="modelOptions = form.ngModelOptions || {updateOn : 'blur'};">
+    <div class="label-wrapper">
+        <label ng-show="showTitle()">{{form.title}}<span class="sub">{{form.subtitle}}</span></label>
+        <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
+    </div>
+
+    <span class="help-block navn-message has-error" ng-show="!disabledElement() && hasError() && errorMessage(schemaError())">
+        <small class="help-block">
+            <span class="stb-color-sprite-small warning circle"></span>
+            <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
+        </small>
+    </span>
+    <div  class="stb-form-group currency"
+          ng-class="{
+            'has-error': !disabledElement() && hasError(),
+            'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(),
+            'has-feedback': form.feedback !== false }">
+
+        <input type="{{form.formType || 'text'}}"
+               ng-show="form.key"
+               placeholder="{{form.placeholder}}"
+               sf-changed="form"
+               id="{{form.id}}"
+               ng-model-options="modelOptions"
+               ng-model-onblur
+               formatter-name="form.formatterName"
+               model-max-length="form.schema.maxLength"
+               ng-model="$$value$$.sum"
+               schema-validate="form"
+               ng-disabled="disabledElement()">
+
+        <div class="stb-form-group select">
+            <div class="stb-select">
+                <select class="form-control"
+                        ng-model="$$value$$.currency">
+                    <option ng-repeat="curr in form.currencies"
+                            id="{{curr.value}}"
+                            ng-disabled="!!curr.isDisabled">
+                        {{curr.title}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <i class="form-control-feedback glyphicon"
+           ng-show="hasError() || hasSuccess() && conditionalValidationSuccess()"
+           ng-class="{'glyphicon-remove': !disabledElement() && hasError(), 'glyphicon-ok': !disabledElement() && hasSuccess() && conditionalValidationSuccess()}"></i>
+    </div>
+</div>
