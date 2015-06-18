@@ -11,29 +11,34 @@
         </small>
     </span>
     <div  class="stb-form-group currency"
+          stb-currency
+          ng-show="form.key"
+          ng-model="$$value$$"
+          schema-validate="form"
+          sf-changed="form"
           ng-class="{
             'has-error': !disabledElement() && hasError(),
             'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(),
             'has-feedback': form.feedback !== false }">
 
-        <input type="{{form.formType || 'text'}}"
-               ng-show="form.key"
+        <input type="text"
                placeholder="{{form.placeholder}}"
-               sf-changed="form"
                id="{{form.id}}"
-               ng-model-options="modelOptions"
-               ng-model-onblur
                formatter-name="form.formatterName"
                model-max-length="form.schema.maxLength"
-               ng-model="$$value$$.sum"
-               schema-validate="form"
+               ng-change="onCurrencyChange()"
+               ng-model="value.sum"
+               ng-model-options="modelOptions"
+               ng-model-onblur
                ng-disabled="disabledElement()">
 
         <div class="stb-form-group select">
             <div class="stb-select">
                 <select class="form-control"
-                        ng-model="$$value$$.currency">
-                    <option ng-repeat="curr in form.currencies"
+                        ng-change="onCurrencyChange()"
+                        ng-model-onblur
+                        ng-model="value.currency">
+                    <option ng-repeat="curr in currenciesList"
                             id="{{curr.value}}"
                             ng-disabled="!!curr.isDisabled">
                         {{curr.title}}

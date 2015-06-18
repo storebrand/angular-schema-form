@@ -68,6 +68,17 @@ gulp.task('bootstrap-datepicker', function() {
         .pipe(concat('bootstrap-datepicker.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/'));
+});
+
+
+gulp.task('bootstrap-currency', function() {
+  var stream = streamqueue({objectMode: true});
+  stream.queue(gulp.src('./src/directives/decorators/stb-webmanual/currency/*.js'));
+
+  stream.done()
+        .pipe(concat('bootstrap-currency.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/'));
 
 
 });
@@ -151,6 +162,7 @@ gulp.task('default', [
   'minify',
   'less',
   'bootstrap-datepicker',
+  'bootstrap-currency',
   'dropdown',
   'stb-webmanual',
   'non-minified-dist'
