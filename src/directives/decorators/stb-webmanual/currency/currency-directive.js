@@ -1,4 +1,4 @@
-angular.module('schemaForm').directive('stbCurrency', ['$timeout', function($timeout) {
+angular.module('schemaForm').directive('stbCurrency', function() {
   'use strict';
 
   return {
@@ -9,7 +9,9 @@ angular.module('schemaForm').directive('stbCurrency', ['$timeout', function($tim
       scope.value = {};
 
       try {
-        scope.value = JSON.parse(ngModelCtrl.$modelValue);
+        if (ngModelCtrl.$modelValue) {
+          scope.value = JSON.parse(ngModelCtrl.$modelValue);
+        }
       }
       catch(err){
         console.log('Error parsing JSON', err);
@@ -19,20 +21,7 @@ angular.module('schemaForm').directive('stbCurrency', ['$timeout', function($tim
         ngModelCtrl.$setViewValue(JSON.stringify(scope.value));
       };
 
-      scope.currenciesList = [
-        {
-          value: 'KR',
-          title: 'KR'
-        },
-        {
-          value: 'UAH',
-          title: 'UAH'
-        },
-        {
-          value: 'USD',
-          title: 'USD'
-        }
-      ];
+      scope.currencies = attrs.currencies ? JSON.parse(attrs.currencies) : [];
     }
   };
-}]);
+});

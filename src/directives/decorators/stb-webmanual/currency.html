@@ -12,6 +12,7 @@
     </span>
     <div  class="stb-form-group currency"
           stb-currency
+          currencies="{{form.currencies}}"
           ng-show="form.key"
           ng-model="$$value$$"
           schema-validate="form"
@@ -38,7 +39,7 @@
                         ng-change="onCurrencyChange()"
                         ng-model-onblur
                         ng-model="value.currency">
-                    <option ng-repeat="curr in currenciesList"
+                    <option ng-repeat="curr in currencies"
                             id="{{curr.value}}"
                             ng-disabled="!!curr.isDisabled">
                         {{curr.title}}

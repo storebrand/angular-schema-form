@@ -50,17 +50,22 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
           var _isValid = result.valid;
           error = result.error;
 
-          if (_isValid){
-            if (form.validations && form.validations.length){
-              form.validations.forEach(function(validation){
-                _isValid = validation.validator(value, scope.model);
+          if (_isValid && form.validations && form.validations.length){
+            form.validations.every(function(validation){
+              _isValid = validation.validator(value, scope.model);
+
+              if (!_isValid){
                 error = {code: validation.errorCode};
-              });
-            }
+                return false;
+              }
+
+              return true;
+            });
           }
 
           return _isValid;
         };
+
       } else {
 
         // Angular 1.2
