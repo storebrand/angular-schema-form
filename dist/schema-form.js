@@ -293,7 +293,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
             var evalExpression = function (expression) {
               angular.forEach(scope.form.dependencies, function (key) {
-                expression = expression.replace(key, lookupForKey(key));
+                expression = expression.replace(new RegExp(key, 'g'), lookupForKey(key));
               });
 
               return scope.$eval(expression)
