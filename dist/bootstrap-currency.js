@@ -1,0 +1,1 @@
+angular.module("schemaForm").config(["schemaFormProvider","schemaFormDecoratorsProvider","sfPathProvider",function(r,t,o){"use strict";var e=function(t,e,s){if("string"===e.type&&"json"===e.format){var a=r.stdFormObj(t,e,s);return a.key=s.path,a.type="currency",s.lookup[o.stringify(s.path)]=a,a}};r.defaults.string.unshift(e)}]);

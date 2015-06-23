@@ -1900,7 +1900,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       if (attrs.type === 'radio') {
         scope = scope.$parent;
         if (!scope.ngModel) {
-          scope.ngModel = ngModel
+          scope.ngModel = ngModel;
         }
       } else {
         //Since we have scope false this is the same scope
@@ -1930,10 +1930,28 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       // Get in last of the parses so the parsed value has the correct type.
       if (ngModel.$validators) { // Angular 1.3
         ngModel.$validators.schema = function (value) {
-          var result = sfValidator.validate(getForm(), value);
+          var form = getForm();
+
+          var result = sfValidator.validate(form, value);
+          var _isValid = result.valid;
           error = result.error;
-          return result.valid;
+
+          if (_isValid && form.validations && form.validations.length){
+            form.validations.every(function(validation){
+              _isValid = validation.validator(value, scope.model);
+
+              if (!_isValid){
+                error = {code: validation.errorCode};
+                return false;
+              }
+
+              return true;
+            });
+          }
+
+          return _isValid;
         };
+
       } else {
 
         // Angular 1.2

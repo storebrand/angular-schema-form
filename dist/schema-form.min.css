@@ -260,6 +260,26 @@ form .col-md-12 {
 .stb-form-group.select {
   display: block;
 }
+.currency .sum-input {
+  position: relative;
+}
+.currency .sum-input label {
+  margin-left: 5px;
+}
+.currency .sum-input input {
+  display: inline;
+  width: 305px !important;
+}
+.currency .sum-input i.form-control-feedback {
+  top: 34px !important;
+}
+.currency .curr-select {
+  float: left;
+  margin-right: 10px;
+}
+.currency .curr-select label {
+  margin-left: 5px;
+}
 .command-panel .stb-btn {
   margin-right: 12px;
 }

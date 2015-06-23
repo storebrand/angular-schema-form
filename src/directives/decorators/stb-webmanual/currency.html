@@ -1,0 +1,66 @@
+<div ng-show="showCondition()" ng-init="modelOptions = form.ngModelOptions || {updateOn : 'blur'};">
+    <div ng-show="!!form.titles.main" class="label-wrapper">
+        <label>{{form.titles.main}}<span class="sub">{{form.subtitle}}</span></label>
+        <span ng-if="form.infoMessage" info-help-message info-message="form.infoMessage"></span>
+    </div>
+
+    <span class="help-block navn-message has-error" ng-show="!disabledElement() && hasError() && errorMessage(schemaError())">
+        <small class="help-block">
+            <span class="stb-color-sprite-small warning circle"></span>
+            <span ng-bind-html="(hasError() && errorMessage(schemaError()))"></span>
+        </small>
+    </span>
+    <div  class="stb-form-group currency"
+          stb-currency
+          currencies="{{form.currencies}}"
+          ng-show="form.key"
+          ng-model="$$value$$"
+          schema-validate="form"
+          sf-changed="form"
+          ng-class="{
+            'has-error': !disabledElement() && hasError(),
+            'has-success': !disabledElement() && hasSuccess() && conditionalValidationSuccess(),
+            'has-feedback': form.feedback !== false }">
+
+          <div class="stb-form-group curr-select">
+            <div class="label-wrapper">
+                <label>{{form.titles.currency}}</label>
+            </div>
+            <div class="stb-select">
+                <select class="form-control"
+                        ng-change="onCurrencyChange()"
+                        ng-model-onblur
+                        ng-model="value.currency">
+                    <option ng-repeat="curr in currencies"
+                            id="{{curr.value}}"
+                            ng-disabled="!!curr.isDisabled">
+                        {{curr.title}}
+                    </option>
+                </select>
+            </div>
+          </div>
+
+          <div class="stb-form-group sum-input">
+            <div class="label-wrapper">
+                <label>{{form.titles.sum}}
+                </label>
+            </div>
+            <input type="text"
+                   class="form-control"
+                   placeholder="{{form.placeholder}}"
+                   id="{{form.id}}"
+                   formatter-name="form.formatterName"
+                   model-max-length="form.schema.maxLength"
+                   ng-change="onCurrencyChange()"
+                   ng-model="value.sum"
+                   ng-model-options="modelOptions"
+                   ng-model-onblur
+                   ng-disabled="disabledElement()">
+
+            <i class="form-control-feedback glyphicon"
+               ng-show="hasError() || hasSuccess() && conditionalValidationSuccess()"
+               ng-class="{'glyphicon-remove': !disabledElement() && hasError(), 'glyphicon-ok': !disabledElement() && hasSuccess() && conditionalValidationSuccess()}"></i>
+          </div>
+
+    </div>
+</div>
