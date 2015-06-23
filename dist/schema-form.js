@@ -1931,6 +1931,7 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', functio
       if (ngModel.$validators) { // Angular 1.3
         ngModel.$validators.schema = function (value) {
           var form = getForm();
+
           var result = sfValidator.validate(form, value);
           var _isValid = result.valid;
           error = result.error;

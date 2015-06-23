@@ -17,6 +17,10 @@ angular.module('schemaForm').directive('stbCurrency', function() {
         console.log('Error parsing JSON', err);
       }
 
+      scope.$watch(scope.keyModelName, function(){
+        scope.value = ngModelCtrl.$modelValue ? JSON.parse(ngModelCtrl.$modelValue) : {};
+      });
+
       scope.onCurrencyChange = function(){
         ngModelCtrl.$setViewValue(JSON.stringify(scope.value));
       };
