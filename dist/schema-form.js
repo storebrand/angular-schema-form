@@ -1681,9 +1681,6 @@ angular.module('schemaForm').directive('placeholder', function() {
           });
 
         element
-          .on('change', function(){
-            console.log('val changed');
-          })
           .addClass('hidden')
           .after(clonedEl)
           .blur(function() {
