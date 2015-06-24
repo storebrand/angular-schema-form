@@ -1670,7 +1670,7 @@ angular.module('schemaForm').directive('placeholder', function() {
   return {
       replace: false,
       restrict: 'A',
-      link: function(scope, element) {
+      link: function(scope, element, attrs) {
         var placeholder = scope.$eval(element.attr('placeholder').replace(/[\{,\}]/g, ''));
         var clonedEl = element.clone().addClass('placeholder-text').val(placeholder);
 
@@ -1689,6 +1689,13 @@ angular.module('schemaForm').directive('placeholder', function() {
               element.addClass('hidden');
             }
           });
+
+        scope.$watch(attrs.ngModel, function (v) {
+          if(v){
+            clonedEl.addClass('hidden');
+            element.removeClass('hidden');
+          }
+        });
 
       }
   };
