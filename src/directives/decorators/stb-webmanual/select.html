@@ -27,5 +27,6 @@
               schema-validate="form"
               ng-options="item as item.name for item in form.titleMap | orderBy: 'name' track by item.name">
         </select>
+        <span ng-if="form.description" class="">{{form.description}}</span>
     </div>
 </div>

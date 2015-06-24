@@ -51,6 +51,7 @@
     {
       "key": "select2",
       "type": "select",
+      "description": "Here comes the description",
       "titleMap": {
         "a": "A",
         "b": "B",
