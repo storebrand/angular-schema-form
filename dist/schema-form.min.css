@@ -276,6 +276,7 @@ form .col-md-12 {
 .currency .curr-select {
   float: left;
   margin-right: 10px;
+  width: 105px;
 }
 .currency .curr-select label {
   margin-left: 5px;
