@@ -369,10 +369,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
               var show = evalExpression(expressionString);
               var model = $parse(scope.keyModelName);
+              var disabled = scope.isFormDisabled();
 
               if (angular.isDefined(scope.form.required)) {
-                scope.form.required = show;
-                scope.form.schema.required = show;
+                scope.form.required = show && !disabled;
+                scope.form.schema.required = show && !disabled;
               }
 
 
@@ -409,14 +410,18 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               input.attr('checked', scope.ngModelHolder.$modelValue);
             };
 
-            scope.disabledElement = function () {
+            scope.isFormDisabled = function() {
               var expressionString = scope.form.disableExpression;
 
               if (angular.isUndefined(expressionString) && angular.isUndefined(scope.form.disabled)) {
                 return false;
               }
 
-              var disabled = evalExpression(expressionString);
+              return evalExpression(expressionString);
+            };
+
+            scope.disabledElement = function () {
+              var disabled = scope.isFormDisabled();
 
               if (angular.isDefined(scope.form.required)) {
                 scope.form.required = !disabled;
@@ -424,9 +429,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               }
 
               if (disabled) {
-                //scope.ngModelHolder.$setViewValue(undefined);
                 scope.ngModelHolder.$setPristine();
-                //element.find('input').val('');
 
                 if (element.find('input').val() === ''){
                   scope.ngModelHolder.$setViewValue(undefined);
