@@ -26,9 +26,10 @@
             <div class="label-wrapper">
                 <label>{{form.titles.currency}}</label>
             </div>
-            <div class="stb-select">
+             <div class="stb-form-group select">
+                <div class="stb-select" tabindex="3">
                 <select class="form-control"
-                        ng-change="onCurrencyChange()"
+                        ng-change="onChange()"
                         ng-model-onblur
                         ng-model="value.currency">
                     <option ng-repeat="curr in currencies"
@@ -37,6 +38,7 @@
                         {{curr.title}}
                     </option>
                 </select>
+              </div>
             </div>
           </div>
 
@@ -51,7 +53,7 @@
                    id="{{form.id}}"
                    formatter-name="form.formatterName"
                    model-max-length="form.schema.maxLength"
-                   ng-change="onCurrencyChange()"
+                   ng-change="onChange()"
                    ng-model="value.sum"
                    ng-model-options="modelOptions"
                    ng-model-onblur

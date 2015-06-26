@@ -18,10 +18,10 @@ angular.module('schemaForm').directive('stbCurrency', function() {
       }
 
       scope.$watch(scope.keyModelName, function(){
-        scope.value = ngModelCtrl.$modelValue ? JSON.parse(ngModelCtrl.$modelValue) : {};
+        scope.value = ngModelCtrl.$viewValue ? JSON.parse(ngModelCtrl.$viewValue) : {};
       });
 
-      scope.onCurrencyChange = function(){
+      scope.onChange = function(){
         ngModelCtrl.$setViewValue(JSON.stringify(scope.value));
       };
 
