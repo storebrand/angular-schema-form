@@ -12,6 +12,7 @@
     </span>
     <div  class="stb-form-group currency"
           stb-currency
+          name="form.key"
           currencies="{{form.currencies}}"
           ng-show="form.key"
           ng-model="$$value$$"
@@ -29,14 +30,9 @@
              <div class="stb-form-group select">
                 <div class="stb-select" tabindex="3">
                 <select class="form-control"
-                        ng-change="onChange()"
-                        ng-model-onblur
-                        ng-model="value.currency">
-                    <option ng-repeat="curr in currencies"
-                            id="{{curr.value}}"
-                            ng-disabled="!!curr.isDisabled">
-                        {{curr.title}}
-                    </option>
+                        ng-change="onCurrChange()"
+                        ng-model="value.currency"
+                        ng-options="curr.value as curr.title for curr in currencies">
                 </select>
               </div>
             </div>
@@ -53,7 +49,7 @@
                    id="{{form.id}}"
                    formatter-name="form.formatterName"
                    model-max-length="form.schema.maxLength"
-                   ng-change="onChange()"
+                   ng-change="onSumChange()"
                    ng-model="value.sum"
                    ng-model-options="modelOptions"
                    ng-model-onblur
