@@ -362,38 +362,27 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             scope.showCondition = function () {
-              var expressionString = scope.form.expression;
-              if (angular.isUndefined(expressionString)) {
-                return true;
-              }
+              var show = scope.isFormVisible();
+              var disabled = scope.isFormDisabled();
 
-              var show = evalExpression(expressionString);
+              setRequired(scope.form, show, disabled);
+
               var model = $parse(scope.keyModelName);
-
-              if (angular.isDefined(scope.form.required)) {
-                scope.form.required = show;
-                scope.form.schema.required = show;
-              }
-
 
               if (angular.isArray(scope.form.conditionalValues)) {
                 var conditionalValue = getConditionalValue();
                 if (angular.isDefined(conditionalValue)) {
                   model.assign(scope, conditionalValue);
                 }
-
               } else if (scope.form.key && !show) {
-
                 model.assign(scope, undefined);
                 if (scope.ngModelHolder) {
                   scope.ngModelHolder.$render();
                   scope.ngModelHolder.$setPristine();
                 }
-
               }
 
               return show;
-
             };
 
             scope.clickCheckbox = function () {
@@ -409,24 +398,40 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               input.attr('checked', scope.ngModelHolder.$modelValue);
             };
 
-            scope.disabledElement = function () {
+            scope.isFormDisabled = function() {
               var expressionString = scope.form.disableExpression;
 
               if (angular.isUndefined(expressionString) && angular.isUndefined(scope.form.disabled)) {
                 return false;
               }
 
-              var disabled = evalExpression(expressionString);
+              return evalExpression(expressionString);
+            };
 
-              if (angular.isDefined(scope.form.required)) {
-                scope.form.required = !disabled;
-                scope.form.schema.required = !disabled;
+            scope.isFormVisible = function() {
+              var expressionString = scope.form.expression;
+              if (angular.isUndefined(expressionString)) {
+                return true;
               }
 
+              return evalExpression(expressionString);
+            };
+
+            var setRequired = function(form, visible, disabled) {
+              if (angular.isDefined(form.required)) {
+                form.required = visible && !disabled;
+                form.schema.required = visible && !disabled;
+              }
+            };
+
+            scope.disabledElement = function () {
+              var disabled = scope.isFormDisabled();
+              var visible = scope.isFormVisible();
+
+              setRequired(scope.form, visible, disabled);
+
               if (disabled) {
-                //scope.ngModelHolder.$setViewValue(undefined);
                 scope.ngModelHolder.$setPristine();
-                //element.find('input').val('');
 
                 if (element.find('input').val() === ''){
                   scope.ngModelHolder.$setViewValue(undefined);
