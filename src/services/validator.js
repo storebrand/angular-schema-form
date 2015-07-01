@@ -48,7 +48,7 @@ angular.module('schemaForm').factory('sfValidator', [function() {
     },
     'date-format': function(data, schema) {
       if (typeof data === 'string') {
-        if (Date.parse(data)) {
+        if (moment(data).isValid()) {
           return null;
         } else {
           return 'invalid date';
