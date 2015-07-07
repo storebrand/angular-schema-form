@@ -1,10 +1,10 @@
-angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope', function($timeout, $rootScope) {
+angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($timeout) {
   'use strict';
 
   var dateTimeFormat = 'YYYY-MM-DDTHH:mm:ss';
-  var dateFormat = 'YYYY-MM-DD';
-  var timeFormat = 'HH:mm';
-  var sstimeFormat = 'HH:mm:ss';
+  var dateFormat     = 'YYYY-MM-DD';
+  var timeFormat     = 'HH:mm';
+  var sstimeFormat   = 'HH:mm:ss';
 
   return {
     restrict: 'A',
@@ -41,8 +41,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
 
       var defaultDate = attrs.defaultDate;
 
-      var name = _.last(scope.$eval(attrs.name));
-
       scope.timeOptions = [];
 
       $(element).datetimepicker({
@@ -53,40 +51,45 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
         minDate: minDate,
         maxDate: maxDate
       }).on('dp.change', function () {
-        scope.$apply(function () {
+        $timeout(function () {
           ngModelCtrl.$setViewValue(getInputsDateTime());
         });
       }).on('dp.error', function () {
-        scope.$apply(function () {
+        $timeout(function () {
           ngModelCtrl.$setViewValue(undefined);
         });
       });
 
       /* --- subscriptions --- */
-      scope.$watch('model', onModelChange);
       scope.$watch(scope.keyModelName, onKeyModelChange);
 
-      scope.$on('datetimepicker.changed', function(event, data){
-        if (data.name === name) return;
+      if (!minDate.isValid()){
+        scope.$watch(attrs.minDate, getRestrictionCb('min'));
+      }
 
-        var restrict = {
-          min: data.name === attrs.minDate && data.value,
-          max: data.name === attrs.maxDate && data.value
+      if (!maxDate.isValid()){
+        scope.$watch(attrs.maxDate, getRestrictionCb('max'));
+      }
+
+      function getRestrictionCb(restrictType){
+        return function(newValue){
+          var restrict = {};
+
+          restrict[restrictType] = newValue;
+
+          setDatepickerRestrictions(restrict);
+
+          if (scope.selectedTime){
+            var selectedDateTimeVal = minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue ?
+                  minDate.format(dateTimeFormat) :
+                    (maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue ?
+                      maxDate.format(dateTimeFormat) : ngModelCtrl.$viewValue);
+
+            reinitTimepicker(selectedDateTimeVal);
+            setDatepickerValue(selectedDateTimeVal);
+          }
         };
-
-        setDatepickerRestrictions(restrict);
-
-        if (scope.selectedTime){
-          var selectedDateTimeVal = minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue ?
-                minDate.format(dateTimeFormat) :
-                  (maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue ?
-                    maxDate.format(dateTimeFormat) : ngModelCtrl.$viewValue);
-
-          reinitTimepicker(selectedDateTimeVal);
-          setDatepickerValue(selectedDateTimeVal, true);
-        }
-
-      });
+      }
 
       if (showTime){
         initTimepicker();
@@ -95,20 +98,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
             ngModelCtrl.$setViewValue(getInputsDateTime());
           }
         };
-
       } else {
         element.addClass('no-timepicker');
-      }
-
-      function onModelChange(){
-        $timeout(function() {
-          var restrict = {
-            min: minDate.isValid() ? null : scope.$eval(attrs.minDate),
-            max: maxDate.isValid() ? null : scope.$eval(attrs.maxDate)
-          };
-
-          setDatepickerRestrictions(restrict);
-        });
       }
 
       function onKeyModelChange(){
@@ -159,9 +150,9 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
         var isMaxDateSelected = areEqualDates(maxDate, selectedDate);
         var isMinDateSelected = areEqualDates(minDate, selectedDate);
 
-        return attrs.defaultTime ||
-          (isMaxDateSelected && maxTime < noon ? maxTime :
-            (isMinDateSelected && minTime > noon ? minTime : noon));
+        return isMaxDateSelected && maxTime<noon ? maxTime :
+               isMinDateSelected && minTime>noon ? minTime :
+                  attrs.defaultTime || noon;
       }
 
       function initTimepicker(){
@@ -199,13 +190,12 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
         }
       }
 
-      function setDatepickerValue(dateTimeValue, isSilent) {
+      function setDatepickerValue(dateTimeValue) {
         var viewValue = moment(dateTimeValue, dateTimeFormat);
 
         if (viewValue.isValid()){
           var viewDate = viewValue.format('DD.MM.YY');
           $(element).data('DateTimePicker').setDate(viewDate);
-          if (!isSilent) $rootScope.$broadcast('datetimepicker.changed', {name: name, value: viewValue});
         }
       }
 
@@ -229,7 +219,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', '$rootScope
           if (isInMaxTimeRange  && isInMinTimeRange){
             setTimepickerRestrictions(_maxTimeToSet , _minTimeToSet);
           } else {
-            ngModelCtrl.$setViewValue(toIsoFormat($date.val(), calculateDefaultTime(viewValue)));
+            ngModelCtrl.$setViewValue(toIsoFormat($date.val(), _minTimeToSet || _maxTimeToSet || calculateDefaultTime(viewValue)));
           }
         }
       }
