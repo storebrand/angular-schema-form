@@ -103,7 +103,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               }
             });
 
-            scope.globalSchema = sfSchema.evalInMainScope('schema');
+             if(sfSchema) {
+               scope.globalSchema = sfSchema.evalInMainScope('schema');
+             }
 
             //Keep error prone logic from the template
             scope.showTitle = function() {
