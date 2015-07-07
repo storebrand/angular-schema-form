@@ -18,7 +18,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       }
 
       var HH = 24;
-      var noon = '12:00';
       var today = moment();
       var tomorrow = moment().add(1, 'day');
 
@@ -38,8 +37,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       var maxTime = roundTime(maxDate);
 
       var showTime = Boolean(attrs.showTime);
-
-      var defaultDate = attrs.defaultDate;
 
       scope.timeOptions = [];
 
@@ -71,26 +68,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         scope.$watch(attrs.maxDate, getRestrictionCb('max'));
       }
 
-      function getRestrictionCb(restrictType){
-        return function(newValue){
-          var restrict = {};
-
-          restrict[restrictType] = newValue;
-
-          setDatepickerRestrictions(restrict);
-
-          if (scope.selectedTime){
-            var selectedDateTimeVal = minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue ?
-                  minDate.format(dateTimeFormat) :
-                    (maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue ?
-                      maxDate.format(dateTimeFormat) : ngModelCtrl.$viewValue);
-
-            reinitTimepicker(selectedDateTimeVal);
-            setDatepickerValue(selectedDateTimeVal);
-          }
-        };
-      }
-
       if (showTime){
         initTimepicker();
         scope.selectedTimeChanged = function(){
@@ -108,6 +85,31 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
           reinitTimepicker(ngModelCtrl.$viewValue);
           setDatepickerValue(ngModelCtrl.$viewValue);
         });
+      }
+
+      function getRestrictionCb(restrictType){
+        return function(newValue){
+          var restrict = {};
+
+          restrict[restrictType] = newValue;
+
+          setDatepickerRestrictions(restrict);
+
+          if (scope.selectedTime){
+            var selectedDateTimeVal = ngModelCtrl.$viewValue;
+
+            if (minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue){
+              selectedDateTimeVal = minDate.format(dateTimeFormat);
+            } else if (maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue){
+              selectedDateTimeVal = maxDate.format(dateTimeFormat);
+            } else {
+              return;
+            }
+
+            reinitTimepicker(selectedDateTimeVal);
+            setDatepickerValue(selectedDateTimeVal);
+          }
+        };
       }
 
       /* --- function is used to set model's viewValue --- */
@@ -142,27 +144,28 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       /* --- functions for initial val setting --- */
       function getViewTime(){
         return ngModelCtrl.$viewValue ?
-          moment(ngModelCtrl.$viewValue).format(timeFormat) :
-          calculateDefaultTime(defaultDate);
+                  moment(ngModelCtrl.$viewValue).format(timeFormat) :
+                    attrs.defaultTime;
       }
 
       function calculateDefaultTime(selectedDate){
         var isMaxDateSelected = areEqualDates(maxDate, selectedDate);
         var isMinDateSelected = areEqualDates(minDate, selectedDate);
 
-        return isMaxDateSelected && maxTime<noon ? maxTime :
-               isMinDateSelected && minTime>noon ? minTime :
-                  attrs.defaultTime || noon;
+        return isMaxDateSelected && maxTime<attrs.defaultTime ? maxTime :
+               isMinDateSelected && minTime>attrs.defaultTime ? minTime :
+                  attrs.defaultTime;
       }
 
       function initTimepicker(){
+        var minsList = [':00', ':30'];
         for (var h=0; h<HH; h++){
-          [':00', ':30'].forEach(function(mins){
+          for (var index in minsList){
             scope.timeOptions.push({
-              value: formatTime(h + mins),
+              value: formatTime(h + minsList[index]),
               isDisabled: false
             });
-          });
+          }
         }
 
         element.addClass('has-timepicker');
@@ -172,20 +175,12 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         if (restrict.min && moment(restrict.min).isValid()) {
           minDate = moment(restrict.min);
           minTime = moment(minDate, dateTimeFormat).format(timeFormat);
-
-          if (defaultDate < minDate){
-            defaultDate = minDate;
-          }
           $(element).data('DateTimePicker').setMinDate(minDate);
         }
 
         if (restrict.max && moment(restrict.max).isValid()) {
           maxDate = moment(restrict.max);
           maxTime = maxDate.format(timeFormat);
-
-          if (defaultDate > maxDate){
-            defaultDate = maxDate;
-          }
           $(element).data('DateTimePicker').setMaxDate(maxDate);
         }
       }
