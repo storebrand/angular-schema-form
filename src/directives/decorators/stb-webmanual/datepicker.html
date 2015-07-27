@@ -16,7 +16,6 @@
                     'has-feedback': form.feedback !== false }">
         <div
                 stb-datepicker
-                name="form.key"
                 ng-model="$$value$$"
                 schema-validate="form"
                 class='input-group date datePicker'
@@ -26,6 +25,7 @@
                 max-date="{{form.maxDate}}"
                 disable-until-today="form.disableUntilToday"
                 monthly-difference="form.monthlyDifference"
+                default-time="12:00"
                 data-date-format="DD/MM/YYYY">
             <input ng-show="form.key"
                    placeholder="{{form.placeholder}}"
