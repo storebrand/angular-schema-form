@@ -28,7 +28,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
 
       var $date = $(element).find('input');
 
-      var difference =  scope.$eval(attrs.monthlyDifference);
+      var difference = scope.$eval(attrs.monthlyDifference);
 
       var minDate = reservedDates[attrs.minDate] || moment(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate();
       var maxDate = reservedDates[attrs.maxDate] || moment(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate();
@@ -37,6 +37,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       var maxTime = roundTime(maxDate);
 
       var showTime = Boolean(attrs.showTime);
+      var noDefaultDate = !!attrs.noDefaultDate;
 
       scope.timeOptions = [];
 
@@ -90,25 +91,23 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       function getRestrictionCb(restrictType){
         return function(newValue){
           var restrict = {};
-
           restrict[restrictType] = newValue;
 
           setDatepickerRestrictions(restrict);
 
-          if (scope.selectedTime){
-            var selectedDateTimeVal = ngModelCtrl.$viewValue;
+          var selectedDateTimeVal = ngModelCtrl.$viewValue;
 
-            if (minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue){
-              selectedDateTimeVal = minDate.format(dateTimeFormat);
-            } else if (maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue){
-              selectedDateTimeVal = maxDate.format(dateTimeFormat);
-            } else {
-              return;
-            }
-
-            reinitTimepicker(selectedDateTimeVal);
-            setDatepickerValue(selectedDateTimeVal);
+          if (!noDefaultDate && minDate.isValid() && minDate.format(dateTimeFormat) > ngModelCtrl.$viewValue){
+            selectedDateTimeVal = minDate.format(dateTimeFormat);
+          } else if (!noDefaultDate && maxDate.isValid() && maxDate.format(dateTimeFormat) < ngModelCtrl.$viewValue){
+            selectedDateTimeVal = maxDate.format(dateTimeFormat);
+          } else {
+            return;
           }
+
+          if (showTime) { reinitTimepicker(selectedDateTimeVal); }
+          setDatepickerValue(selectedDateTimeVal);
+
         };
       }
 
