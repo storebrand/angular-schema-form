@@ -500,6 +500,7 @@
       }
       container_props = {
         'class': container_classes.join(' '),
+        'tabindex': '0',
         'style': "width: " + (this.container_width()) + ";",
         'title': this.form_field.title
       };
