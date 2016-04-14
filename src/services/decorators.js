@@ -341,7 +341,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 firstNameForm.validationExpression = "" + validateExpression;
                 lastNameForm.validationExpression =  "" + validateExpression;
                 userErrorForm.expression = "" + !isCustomerValid;
-                countryCodeErrorForm.expression = "" + !isCountryCodeValid;
+                countryCodeErrorForm.expression = "" + (isCustomerValid && !isCountryCodeValid);
               };
 
               var personNumberForm = $filter('filter')(form.items, {itemType: "personNumber"})[0];
@@ -367,7 +367,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 }
               };
 
-              updateExpressions(false, true);
+              updateExpressions(false, true, true);
 
               scope.$watch(function () {
                 return scope.$eval(personNumberKey);
