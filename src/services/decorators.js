@@ -268,7 +268,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             var setRequired = function(form, visible, disabled) {
-              if (angular.isDefined(form.required)) {
+             if (angular.isDefined(form.required)) {
                 form.required = visible && !disabled;
                 form.schema.required = visible && !disabled;
               }
@@ -337,10 +337,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             scope.extendUserForm = function (form) {
-              var updateExpressions = function (validateExpression, isCustomerValid) {
+              var updateExpressions = function (validateExpression, isCustomerValid, isCountryCodeValid) {
                 firstNameForm.validationExpression = "" + validateExpression;
                 lastNameForm.validationExpression =  "" + validateExpression;
                 userErrorForm.expression = "" + !isCustomerValid;
+                countryCodeErrorForm.expression = "" + !isCountryCodeValid;
               };
 
               var personNumberForm = $filter('filter')(form.items, {itemType: "personNumber"})[0];
@@ -350,6 +351,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               var lastNameForm = $filter('filter')(form.items, {itemType: "lastName"})[0];
               var lastNameKey = lookupForKey(lastNameForm.key);
               var userErrorForm = $filter('filter')(form.items, {itemType: "userError"})[0];
+              var countryCodeErrorForm = $filter('filter')(form.items, {itemType: "countryCodeError"})[0];
               var validCustomer = {};
 
               var sendCustomerInfo = function () {
@@ -396,7 +398,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   $parse(firstNameKey).assign(scope, data.firstName);
                   $parse(lastNameKey).assign(scope, data.lastName);
                 }
-                updateExpressions(data.isValid, data.isValid);
+                updateExpressions(data.isValid, data.isValid, data.isValidCountryCode);
               });
 
             };
