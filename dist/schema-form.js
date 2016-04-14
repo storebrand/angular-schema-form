@@ -63,6 +63,81 @@ angular.module('schemaForm').provider('sfPath',
   };
 }]);
 
+/**
+ * @ngdoc service
+ * @name sfSelect
+ * @kind function
+ *
+ */
+angular.module('schemaForm').factory('sfSelect', ['sfPath', function (sfPath) {
+  var numRe = /^\d+$/;
+
+  /**
+    * @description
+    * Utility method to access deep properties without
+    * throwing errors when things are not defined.
+    * Can also set a value in a deep structure, creating objects when missing
+    * ex.
+    * var foo = Select('address.contact.name',obj)
+    * Select('address.contact.name',obj,'Leeroy')
+    *
+    * @param {string} projection A dot path to the property you want to get/set
+    * @param {object} obj   (optional) The object to project on, defaults to 'this'
+    * @param {Any}    valueToSet (opional)  The value to set, if parts of the path of
+    *                 the projection is missing empty objects will be created.
+    * @returns {Any|undefined} returns the value at the end of the projection path
+    *                          or undefined if there is none.
+    */
+  return function(projection, obj, valueToSet) {
+    if (!obj) {
+      obj = this;
+    }
+    //Support [] array syntax
+    var parts = typeof projection === 'string' ? sfPath.parse(projection) : projection;
+
+    if (typeof valueToSet !== 'undefined' && parts.length === 1) {
+      //special case, just setting one variable
+      obj[parts[0]] = valueToSet;
+      return obj;
+    }
+
+    if (typeof valueToSet !== 'undefined' &&
+        typeof obj[parts[0]] === 'undefined') {
+       // We need to look ahead to check if array is appropriate
+      obj[parts[0]] = parts.length > 2 && numRe.test(parts[1]) ? [] : {};
+    }
+
+    var value = obj[parts[0]];
+    for (var i = 1; i < parts.length; i++) {
+      // Special case: We allow JSON Form syntax for arrays using empty brackets
+      // These will of course not work here so we exit if they are found.
+      if (parts[i] === '') {
+        return undefined;
+      }
+      if (typeof valueToSet !== 'undefined') {
+        if (i === parts.length - 1) {
+          //last step. Let's set the value
+          value[parts[i]] = valueToSet;
+          return valueToSet;
+        } else {
+          // Make sure to create new objects on the way if they are not there.
+          // We need to look ahead to check if array is appropriate
+          var tmp = value[parts[i]];
+          if (typeof tmp === 'undefined' || tmp === null) {
+            tmp = numRe.test(parts[i + 1]) ? [] : {};
+            value[parts[i]] = tmp;
+          }
+          value = tmp;
+        }
+      } else if (value) {
+        //Just get nex value.
+        value = value[parts[i]];
+      }
+    }
+    return value;
+  };
+}]);
+
 // override the default input to update on blur
 angular.module('schemaForm').filter('reduceMessage', [function() {
   return function (input) {
@@ -343,7 +418,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             var setRequired = function(form, visible, disabled) {
-              if (angular.isDefined(form.required)) {
+             if (angular.isDefined(form.required)) {
                 form.required = visible && !disabled;
                 form.schema.required = visible && !disabled;
               }
@@ -412,10 +487,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             };
 
             scope.extendUserForm = function (form) {
-              var updateExpressions = function (validateExpression, isCustomerValid) {
+              var updateExpressions = function (validateExpression, isCustomerValid, isCountryCodeValid) {
                 firstNameForm.validationExpression = "" + validateExpression;
                 lastNameForm.validationExpression =  "" + validateExpression;
                 userErrorForm.expression = "" + !isCustomerValid;
+                countryCodeErrorForm.expression = "" + !isCountryCodeValid;
               };
 
               var personNumberForm = $filter('filter')(form.items, {itemType: "personNumber"})[0];
@@ -425,6 +501,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               var lastNameForm = $filter('filter')(form.items, {itemType: "lastName"})[0];
               var lastNameKey = lookupForKey(lastNameForm.key);
               var userErrorForm = $filter('filter')(form.items, {itemType: "userError"})[0];
+              var countryCodeErrorForm = $filter('filter')(form.items, {itemType: "countryCodeError"})[0];
               var validCustomer = {};
 
               var sendCustomerInfo = function () {
@@ -471,7 +548,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   $parse(firstNameKey).assign(scope, data.firstName);
                   $parse(lastNameKey).assign(scope, data.lastName);
                 }
-                updateExpressions(data.isValid, data.isValid);
+                updateExpressions(data.isValid, data.isValid, data.isValidCountryCode);
               });
 
             };
@@ -686,7 +763,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
   createDirective('sfDecorator');
 
 }]);
-
 angular.module('schemaForm').factory('formFormatters', [function () {
   var formatters = {
     'carNumber': function (input) {
@@ -1194,81 +1270,6 @@ angular.module('schemaForm').factory('scrollingTop', ['$timeout', function ($tim
     scrollTop: scrollTop
   };
 
-}]);
-
-/**
- * @ngdoc service
- * @name sfSelect
- * @kind function
- *
- */
-angular.module('schemaForm').factory('sfSelect', ['sfPath', function (sfPath) {
-  var numRe = /^\d+$/;
-
-  /**
-    * @description
-    * Utility method to access deep properties without
-    * throwing errors when things are not defined.
-    * Can also set a value in a deep structure, creating objects when missing
-    * ex.
-    * var foo = Select('address.contact.name',obj)
-    * Select('address.contact.name',obj,'Leeroy')
-    *
-    * @param {string} projection A dot path to the property you want to get/set
-    * @param {object} obj   (optional) The object to project on, defaults to 'this'
-    * @param {Any}    valueToSet (opional)  The value to set, if parts of the path of
-    *                 the projection is missing empty objects will be created.
-    * @returns {Any|undefined} returns the value at the end of the projection path
-    *                          or undefined if there is none.
-    */
-  return function(projection, obj, valueToSet) {
-    if (!obj) {
-      obj = this;
-    }
-    //Support [] array syntax
-    var parts = typeof projection === 'string' ? sfPath.parse(projection) : projection;
-
-    if (typeof valueToSet !== 'undefined' && parts.length === 1) {
-      //special case, just setting one variable
-      obj[parts[0]] = valueToSet;
-      return obj;
-    }
-
-    if (typeof valueToSet !== 'undefined' &&
-        typeof obj[parts[0]] === 'undefined') {
-       // We need to look ahead to check if array is appropriate
-      obj[parts[0]] = parts.length > 2 && numRe.test(parts[1]) ? [] : {};
-    }
-
-    var value = obj[parts[0]];
-    for (var i = 1; i < parts.length; i++) {
-      // Special case: We allow JSON Form syntax for arrays using empty brackets
-      // These will of course not work here so we exit if they are found.
-      if (parts[i] === '') {
-        return undefined;
-      }
-      if (typeof valueToSet !== 'undefined') {
-        if (i === parts.length - 1) {
-          //last step. Let's set the value
-          value[parts[i]] = valueToSet;
-          return valueToSet;
-        } else {
-          // Make sure to create new objects on the way if they are not there.
-          // We need to look ahead to check if array is appropriate
-          var tmp = value[parts[i]];
-          if (typeof tmp === 'undefined' || tmp === null) {
-            tmp = numRe.test(parts[i + 1]) ? [] : {};
-            value[parts[i]] = tmp;
-          }
-          value = tmp;
-        }
-      } else if (value) {
-        //Just get nex value.
-        value = value[parts[i]];
-      }
-    }
-    return value;
-  };
 }]);
 
 /*  Common code for validating a value against its form and schema definition */
