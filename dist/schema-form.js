@@ -491,7 +491,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 firstNameForm.validationExpression = "" + validateExpression;
                 lastNameForm.validationExpression =  "" + validateExpression;
                 userErrorForm.expression = "" + !isCustomerValid;
-                countryCodeErrorForm.expression = "" + (isCustomerValid && !isCountryCodeValid);
+                if (countryCodeErrorForm) {
+                  countryCodeErrorForm.expression = "" + (isCustomerValid && isCountryCodeValid !== undefined && !isCountryCodeValid);
+                }
               };
 
               var personNumberForm = $filter('filter')(form.items, {itemType: "personNumber"})[0];
