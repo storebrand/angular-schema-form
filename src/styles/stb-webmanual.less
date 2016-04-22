@@ -99,7 +99,7 @@ label.empty-view {
   }
 
   .form-control-feedback {
-    top: 0px;
+    top: 0;
     display: block;
   }
 
@@ -120,6 +120,19 @@ label.empty-view {
     }
   }
 
+}
+
+//number
+.number {
+  display: block;
+  &.number__input-wrapper {
+    display: inline-block;
+  }
+  &.number__icon {
+    position: static;
+    display: inline-block;
+    margin-left: -38px;
+  }
 }
 
 .row.notification {
