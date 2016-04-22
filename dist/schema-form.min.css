@@ -89,10 +89,10 @@ label.empty-view span {
 .number__input-wrapper {
   display: block;
 }
-.number__input {
+.number__input-wrapper .number__input {
   display: inline-block;
 }
-.number__icon {
+.number__input-wrapper .number__icon {
   position: static;
   display: inline-block;
   margin-left: -38px;
