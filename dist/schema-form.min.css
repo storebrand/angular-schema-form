@@ -86,13 +86,13 @@ label.empty-view span {
   margin: 0 0 6px 0 !important;
   max-width: inherit;
 }
-.number {
+.number__input-wrapper {
   display: block;
 }
-.number.number__input-wrapper {
+.number__input {
   display: inline-block;
 }
-.number.number__icon {
+.number__icon {
   position: static;
   display: inline-block;
   margin-left: -38px;
