@@ -70,7 +70,7 @@ label.empty-view span {
   min-width: 260px;
 }
 .stb-form-group .form-control-feedback {
-  top: 0px;
+  top: 0;
   display: block;
 }
 .stb-form-group.select-wrapper {
@@ -85,6 +85,17 @@ label.empty-view span {
 .stb-form-group.checkboxes label {
   margin: 0 0 6px 0 !important;
   max-width: inherit;
+}
+.number {
+  display: block;
+}
+.number.number__input-wrapper {
+  display: inline-block;
+}
+.number.number__icon {
+  position: static;
+  display: inline-block;
+  margin-left: -38px;
 }
 .row.notification {
   padding-bottom: 0;
