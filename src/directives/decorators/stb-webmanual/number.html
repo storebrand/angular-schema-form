@@ -29,5 +29,7 @@
         <i class="form-control-feedback glyphicon"
            ng-show="hasError() || hasSuccess() && conditionalValidationSuccess()"
            ng-class="{'glyphicon-remove': !disabledElement() && hasError(), 'glyphicon-ok': !disabledElement() && hasSuccess() && conditionalValidationSuccess()}"></i>
+
+        <span class="default__measure-unit" ng-if="form.measureUnit">{{form.measureUnit}}</span>
     </div>
 </div>
