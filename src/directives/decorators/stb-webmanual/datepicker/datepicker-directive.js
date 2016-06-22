@@ -32,7 +32,9 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       });
 
       $timeout(function () {
-      //  $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YYYY"));
+        if(hasDefaultDate) {
+          $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YYYY"));
+        }
       }, 0);
 
     }
