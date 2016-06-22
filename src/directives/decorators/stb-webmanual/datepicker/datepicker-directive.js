@@ -11,6 +11,8 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       }
       var today = moment();
       var difference =  scope.$eval(attrs.monthlyDifference);
+      var hasDefaultDate = scope.$eval(attrs.hasDefaultDate);
+
 
 
       $(element).parent().datetimepicker({
@@ -30,7 +32,7 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       });
 
       $timeout(function () {
-        $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YYYY"));
+      //  $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YYYY"));
       }, 0);
 
     }
