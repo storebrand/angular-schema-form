@@ -22,9 +22,9 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         minDate: scope.$eval(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate(),
         maxDate: scope.$eval(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate()
     }).on('dp.change', function (e) {
-        // scope.$apply(function () {
-        //   ngModelCtrl.$setViewValue(moment(e.date).format('YYYY-MM-DD'));
-        // });
+        scope.$apply(function () {
+          ngModelCtrl.$setViewValue(moment(e.date).format('YYYY-MM-DD'));
+        });
       }).on('dp.error', function (e) {
         scope.$apply(function () {
           ngModelCtrl.$setViewValue(undefined);
