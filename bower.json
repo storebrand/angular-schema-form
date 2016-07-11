@@ -29,6 +29,9 @@
     "test",
     "coverage"
   ],
+  "resolutions": {
+    "angular": "1.2.29"
+  },
   "dependencies": {
     "angular": ">= 1.2",
     "tv4": "~1.0.15",
