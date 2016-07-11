@@ -10,7 +10,9 @@ function addSpaces(val) {
 
 function isValid(val) {
   val = typeof val === 'string' ? val : val.toString();
-  return !isNaN(parseFloat(val.replace(/\s/g, '')));
+  var withoutSpaces = val.replace(/\s/g, '');
+  var parsed = parseFloat(withoutSpaces);
+  return !isNaN(parsed) && parsed.toString().length === withoutSpaces.length;
 }
 
 angular.module('schemaForm').directive('numberFormat', function() {
@@ -25,7 +27,7 @@ angular.module('schemaForm').directive('numberFormat', function() {
       ngModelCtrl.$parsers.unshift(function(viewVal) {
         var noSpacesVal = viewVal.replace(/\s/g, '');
         var parsed = parseFloat(noSpacesVal);
-          if (isNaN(parsed)) {
+          if (isNaN(parsed) || !isValid(viewVal)) {
             return undefined;
           } else {
             return parsed;
