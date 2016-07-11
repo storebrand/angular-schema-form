@@ -1746,7 +1746,6 @@ angular.module('schemaForm').directive('numberFormat', function() {
         var val;
         val = elm.val();
         elm.val(val.replace(/\s/g, ''));
-        return elm[0].select();
       });
     }
   };
