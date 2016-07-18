@@ -168,7 +168,7 @@
         },
         {
           "key": "mileage",
-          "validationMessage": "Ugyldig verdi for kilometerstand.",
+          "validationMessage": "Ugyldig verdi for kilometerstand. <span class='nowrap'>1 000 000</span>",
           "infoMessage": "'Kilometerstand leser du av på bilen din. Riktig kilometerstand er viktig i et eventuelt erstatningsoppgjør",
           "type": "number",
           "title": "Kilometerstand",
