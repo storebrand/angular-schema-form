@@ -24,6 +24,8 @@ angular.module('schemaForm').factory('formFormatters', [function () {
       if (/^\d{8}$/.test(input)) {
         return input;
       }
+
+      return input;
     }
   };
 
