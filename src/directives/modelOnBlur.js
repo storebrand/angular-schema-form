@@ -28,6 +28,10 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
       if (angular.isDefined(maxLength)) {
 
         elm.bind('keydown', function (e) {
+
+          var start = e.target.selectionStart;
+          var end = e.target.selectionEnd;
+
           var charCode = e.which;
           var nonPrintableAllowed =
               charCode < 32
@@ -39,7 +43,9 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
           }
 
           if (elm.val().length >= maxLength) {
-            e.preventDefault();
+            if (!(angular.isDefined(start) && angular.isDefined(end) && (end - start))) {
+              e.preventDefault();
+            }
           }
         });
 

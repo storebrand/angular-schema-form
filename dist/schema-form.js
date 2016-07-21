@@ -1659,6 +1659,10 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
       if (angular.isDefined(maxLength)) {
 
         elm.bind('keydown', function (e) {
+
+          var start = e.target.selectionStart;
+          var end = e.target.selectionEnd;
+
           var charCode = e.which;
           var nonPrintableAllowed =
               charCode < 32
@@ -1670,7 +1674,9 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
           }
 
           if (elm.val().length >= maxLength) {
-            e.preventDefault();
+            if (!(angular.isDefined(start) && angular.isDefined(end) && (end - start))) {
+              e.preventDefault();
+            }
           }
         });
 
@@ -1730,6 +1736,9 @@ angular.module('schemaForm').directive('numberFormat', function() {
 
         var maxLength = scope.$eval(attr.modelMaxLength);
 
+        var start = e.target.selectionStart;
+        var end = e.target.selectionEnd;
+
         // Allow: backspace, delete, tab, escape, enter and .
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
             // Allow: Ctrl+A
@@ -1751,7 +1760,9 @@ angular.module('schemaForm').directive('numberFormat', function() {
         }
 
         if (angular.isDefined(maxLength) &&  elm.val().length >= maxLength) {
-          e.preventDefault();
+          if (!(angular.isDefined(start) && angular.isDefined(end) && (end - start))) {
+            e.preventDefault();
+          }
         }
       });
       
