@@ -373,8 +373,9 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               var maxMonthlyDifference = scope.form.maxMonthlyDifference;
               var additionalMonthlyDifference = scope.form.additionalMonthlyDifference;
               var additionalDailyDifference = scope.form.additionalDailyDifference;
-              var selectedDate = moment(date);
-
+              console.log('updateInfoDate => date: ', date);
+              var selectedDate = moment(date, 'DD.MM.YYYY');
+              console.log('updateInfoDate => selectedDate: ', selectedDate);
               today.milliseconds(0);
               today.second(0);
               today.minute(0);
@@ -393,9 +394,13 @@ angular.module('schemaForm').provider('schemaFormDecorators',
             scope.getInfoDate = function () {
               if (evalExpression(scope.form.expression)) {
                 var date = scope.form.dateKey && scope.$eval(lookupForKey(scope.form.dateKey));
+                console.log('getInfoDate => scope.form.dateKey: ', scope.form.dateKey);
+                console.log('getInfoDate => date: ', date);
                 var selectedDate = updateInfoDate(date);
                 var model = $parse(lookupForKey(scope.form.modelKey));
-                model.assign(scope, selectedDate.format('YYYY-MM-DD'));
+                // model.assign(scope, selectedDate.format('YYYY-MM-DD'));
+                console.log('getInfoDate => selectedDate: ', selectedDate);
+                model.assign(scope, selectedDate.format('DD.MM.YYYY'));
                 moment.locale(scope.form.encoding);
                 return moment(selectedDate).format(scope.form.format);
               }
