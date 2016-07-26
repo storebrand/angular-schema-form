@@ -298,8 +298,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               var maxMonthlyDifference = scope.form.maxMonthlyDifference;
               var additionalMonthlyDifference = scope.form.additionalMonthlyDifference;
               var additionalDailyDifference = scope.form.additionalDailyDifference;
-              var selectedDate = moment(date);
-
+              var selectedDate = moment(date, 'DD.MM.YYYY');
               today.milliseconds(0);
               today.second(0);
               today.minute(0);
@@ -320,7 +319,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 var date = scope.form.dateKey && scope.$eval(lookupForKey(scope.form.dateKey));
                 var selectedDate = updateInfoDate(date);
                 var model = $parse(lookupForKey(scope.form.modelKey));
-                model.assign(scope, selectedDate.format('YYYY-MM-DD'));
+                model.assign(scope, selectedDate.format('DD.MM.YYYY'));
                 moment.locale(scope.form.encoding);
                 return moment(selectedDate).format(scope.form.format);
               }
