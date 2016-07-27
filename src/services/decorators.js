@@ -319,7 +319,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 var date = scope.form.dateKey && scope.$eval(lookupForKey(scope.form.dateKey));
                 var selectedDate = updateInfoDate(date);
                 var model = $parse(lookupForKey(scope.form.modelKey));
-                model.assign(scope, selectedDate.format('DD.MM.YYYY'));
+                model.assign(scope, selectedDate.format('YYYY-MM-DD'));
                 moment.locale(scope.form.encoding);
                 return moment(selectedDate).format(scope.form.format);
               }
