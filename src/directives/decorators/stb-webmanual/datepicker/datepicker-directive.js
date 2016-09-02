@@ -1,4 +1,9 @@
 angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($timeout) {
+
+  var outputDateFormat = 'DD.MM.YYYY';
+  var inputDateFormats = [outputDateFormat];
+  var today = moment();
+
   return {
     restrict: 'A',
     require : 'ngModel',
@@ -9,7 +14,6 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       if (!$.fn.datetimepicker) {
         return;
       }
-      var today = moment();
       var difference =  scope.$eval(attrs.monthlyDifference);
       var hasDefaultDate = scope.$eval(attrs.hasDefaultDate);
 
@@ -18,12 +22,12 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
       $(element).parent().datetimepicker({
         pickTime: false,
         language: 'nb',
-        format: "DD.MM.YYYY",
+        format: outputDateFormat,
         minDate: scope.$eval(attrs.minDate) || scope.$eval(attrs.disableUntilToday) && today.toDate(),
         maxDate: scope.$eval(attrs.maxDate) || difference && moment(today).add(difference, 'Month').toDate()
-    }).on('dp.change', function (e) {
+      }).on('dp.change', function (e) {
         scope.$apply(function () {
-          ngModelCtrl.$setViewValue(moment(e.date).format('DD.MM.YYYY'));
+          ngModelCtrl.$setViewValue(moment(e.date, inputDateFormats).format(outputDateFormat));
         });
       }).on('dp.error', function (e) {
         scope.$apply(function () {
@@ -31,11 +35,14 @@ angular.module('schemaForm').directive('stbDatepicker', ['$timeout', function($t
         });
       });
 
-      $timeout(function () {
+      $timeout(function () { 
         if(hasDefaultDate) {
-          $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue).format("DD.MM.YYYY"));
+          if(!ngModelCtrl.$modelValue) {
+              ngModelCtrl.$setViewValue(today.format(outputDateFormat));
+            }
+            $(element).parent().data("DateTimePicker").setDate(moment(ngModelCtrl.$viewValue, inputDateFormats).format(outputDateFormat));
         }
-      }, 0);
+      }, 0, false);
 
     }
   };
