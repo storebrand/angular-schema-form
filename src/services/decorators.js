@@ -421,7 +421,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   return false;
                 });
               };
-              uploader.onErrorItem = function(item) {
+              uploader.onErrorItem = function(item, response, status) {
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     modelExpression.assign(scope, getModel());
