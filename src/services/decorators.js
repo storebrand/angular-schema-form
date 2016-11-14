@@ -424,6 +424,10 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               uploader.onErrorItem = function(item, response, status) {
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
+                    if (status === 422) {
+                      scope.fileUploadError = scope.fileUploadError || {};
+                      scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
+                    }
                     modelExpression.assign(scope, getModel());
                     return true;
                   }
