@@ -61,81 +61,6 @@ angular.module('schemaForm').provider('sfPath',
   };
 }]);
 
-/**
- * @ngdoc service
- * @name sfSelect
- * @kind function
- *
- */
-angular.module('schemaForm').factory('sfSelect', ['sfPath', function (sfPath) {
-  var numRe = /^\d+$/;
-
-  /**
-    * @description
-    * Utility method to access deep properties without
-    * throwing errors when things are not defined.
-    * Can also set a value in a deep structure, creating objects when missing
-    * ex.
-    * var foo = Select('address.contact.name',obj)
-    * Select('address.contact.name',obj,'Leeroy')
-    *
-    * @param {string} projection A dot path to the property you want to get/set
-    * @param {object} obj   (optional) The object to project on, defaults to 'this'
-    * @param {Any}    valueToSet (opional)  The value to set, if parts of the path of
-    *                 the projection is missing empty objects will be created.
-    * @returns {Any|undefined} returns the value at the end of the projection path
-    *                          or undefined if there is none.
-    */
-  return function(projection, obj, valueToSet) {
-    if (!obj) {
-      obj = this;
-    }
-    //Support [] array syntax
-    var parts = typeof projection === 'string' ? sfPath.parse(projection) : projection;
-
-    if (typeof valueToSet !== 'undefined' && parts.length === 1) {
-      //special case, just setting one variable
-      obj[parts[0]] = valueToSet;
-      return obj;
-    }
-
-    if (typeof valueToSet !== 'undefined' &&
-        typeof obj[parts[0]] === 'undefined') {
-       // We need to look ahead to check if array is appropriate
-      obj[parts[0]] = parts.length > 2 && numRe.test(parts[1]) ? [] : {};
-    }
-
-    var value = obj[parts[0]];
-    for (var i = 1; i < parts.length; i++) {
-      // Special case: We allow JSON Form syntax for arrays using empty brackets
-      // These will of course not work here so we exit if they are found.
-      if (parts[i] === '') {
-        return undefined;
-      }
-      if (typeof valueToSet !== 'undefined') {
-        if (i === parts.length - 1) {
-          //last step. Let's set the value
-          value[parts[i]] = valueToSet;
-          return valueToSet;
-        } else {
-          // Make sure to create new objects on the way if they are not there.
-          // We need to look ahead to check if array is appropriate
-          var tmp = value[parts[i]];
-          if (typeof tmp === 'undefined' || tmp === null) {
-            tmp = numRe.test(parts[i + 1]) ? [] : {};
-            value[parts[i]] = tmp;
-          }
-          value = tmp;
-        }
-      } else if (value) {
-        //Just get nex value.
-        value = value[parts[i]];
-      }
-    }
-    return value;
-  };
-}]);
-
 angular.module('schemaForm').provider('schemaFormDecorators',
 ['$compileProvider', 'sfPathProvider', function($compileProvider, sfPathProvider) {
   'use strict';
@@ -530,6 +455,16 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 return modelExpression(scope);
               };
 
+              var deleteModelItem = function(item) {
+                var indexToDelete;
+                getModel().forEach(function(modelItem, index) {
+                  if (modelItem.uploaderFileItem === item) {
+                    indexToDelete = index;
+                  }
+                });
+                (indexToDelete !== undefined) && getModel().splice(indexToDelete, 1);
+              };
+
               var uploader = new FileUploader(scope.form.uploadConfig);
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
@@ -540,7 +475,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   uploaderFileItem: item
                 };
                 getModel().push(modelItem);
-                modelExpression.assign(scope, getModel());
               };
               uploader.onSuccessItem = function(item, response) {
                 if (angular.isString(response)) {
@@ -553,24 +487,22 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     $.extend(modelItem, response);
-                    modelExpression.assign(scope, getModel());
                     return true;
                   }
                   return false;
                 });
               };
               uploader.onErrorItem = function(item, response, status) {
-                getModel().some(function(modelItem) {
-                  if (modelItem.uploaderFileItem === item) {
-                    if (status === 422 && response && response.error === 'VIRUS_DETECTED') {
-                      scope.fileUploadError = scope.fileUploadError || {};
-                      scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
-                    }
-                    modelExpression.assign(scope, getModel());
-                    return true;
-                  }
-                  return false;
-                });
+
+                scope.fileUploadError = scope.fileUploadError || {};
+                if (status === 422 && response && response.error === 'VIRUS_DETECTED') {
+                  scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
+                } else {
+                  scope.fileUploadError.title = 'Beklager! Vi klarte ikke laste opp filen.';
+                }
+
+                deleteModelItem(item);
+
               };
               uploader.onWhenAddingFileFailed = function(item, error) {
                 scope.fileUploadError = scope.fileUploadError || {};
@@ -580,19 +512,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               scope.uploader = uploader;
 
               scope.removeFile = function(modelItem) {
-                var itemIndex;
-                getModel().some(function(item, index) {
-                  if (modelItem === item) {
-                    itemIndex = index;
-                    return true;
-                  }
-                  return false;
-                });
-
-                if (itemIndex >= 0) {
-                  getModel().splice(itemIndex, 1);
-                  modelExpression.assign(scope, getModel());
-                }
+                deleteModelItem(modelItem.uploaderFileItem);
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
                 if ((!modelItem.uploaderFileItem || (modelItem.uploaderFileItem.isUploaded && !modelItem.uploaderFileItem.isError)) && idKey && modelItem[idKey]) {
@@ -1302,6 +1222,81 @@ angular.module('schemaForm').factory('scrollingTop', ['$timeout', function ($tim
     scrollTop: scrollTop
   };
 
+}]);
+
+/**
+ * @ngdoc service
+ * @name sfSelect
+ * @kind function
+ *
+ */
+angular.module('schemaForm').factory('sfSelect', ['sfPath', function (sfPath) {
+  var numRe = /^\d+$/;
+
+  /**
+    * @description
+    * Utility method to access deep properties without
+    * throwing errors when things are not defined.
+    * Can also set a value in a deep structure, creating objects when missing
+    * ex.
+    * var foo = Select('address.contact.name',obj)
+    * Select('address.contact.name',obj,'Leeroy')
+    *
+    * @param {string} projection A dot path to the property you want to get/set
+    * @param {object} obj   (optional) The object to project on, defaults to 'this'
+    * @param {Any}    valueToSet (opional)  The value to set, if parts of the path of
+    *                 the projection is missing empty objects will be created.
+    * @returns {Any|undefined} returns the value at the end of the projection path
+    *                          or undefined if there is none.
+    */
+  return function(projection, obj, valueToSet) {
+    if (!obj) {
+      obj = this;
+    }
+    //Support [] array syntax
+    var parts = typeof projection === 'string' ? sfPath.parse(projection) : projection;
+
+    if (typeof valueToSet !== 'undefined' && parts.length === 1) {
+      //special case, just setting one variable
+      obj[parts[0]] = valueToSet;
+      return obj;
+    }
+
+    if (typeof valueToSet !== 'undefined' &&
+        typeof obj[parts[0]] === 'undefined') {
+       // We need to look ahead to check if array is appropriate
+      obj[parts[0]] = parts.length > 2 && numRe.test(parts[1]) ? [] : {};
+    }
+
+    var value = obj[parts[0]];
+    for (var i = 1; i < parts.length; i++) {
+      // Special case: We allow JSON Form syntax for arrays using empty brackets
+      // These will of course not work here so we exit if they are found.
+      if (parts[i] === '') {
+        return undefined;
+      }
+      if (typeof valueToSet !== 'undefined') {
+        if (i === parts.length - 1) {
+          //last step. Let's set the value
+          value[parts[i]] = valueToSet;
+          return valueToSet;
+        } else {
+          // Make sure to create new objects on the way if they are not there.
+          // We need to look ahead to check if array is appropriate
+          var tmp = value[parts[i]];
+          if (typeof tmp === 'undefined' || tmp === null) {
+            tmp = numRe.test(parts[i + 1]) ? [] : {};
+            value[parts[i]] = tmp;
+          }
+          value = tmp;
+        }
+      } else if (value) {
+        //Just get nex value.
+        value = value[parts[i]];
+      }
+    }
+    return value;
+  };
 }]);
 
 /*  Common code for validating a value against its form and schema definition */

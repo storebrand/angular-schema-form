@@ -392,6 +392,16 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 return modelExpression(scope);
               };
 
+              var deleteModelItem = function(item) {
+                var indexToDelete;
+                getModel().forEach(function(modelItem, index) {
+                  if (modelItem.uploaderFileItem === item) {
+                    indexToDelete = index;
+                  }
+                });
+                (indexToDelete !== undefined) && getModel().splice(indexToDelete, 1);
+              };
+
               var uploader = new FileUploader(scope.form.uploadConfig);
               uploader.autoUpload = true;
               uploader.removeAfterUpload = true;
@@ -402,7 +412,6 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                   uploaderFileItem: item
                 };
                 getModel().push(modelItem);
-                modelExpression.assign(scope, getModel());
               };
               uploader.onSuccessItem = function(item, response) {
                 if (angular.isString(response)) {
@@ -415,24 +424,22 @@ angular.module('schemaForm').provider('schemaFormDecorators',
                 getModel().some(function(modelItem) {
                   if (modelItem.uploaderFileItem === item) {
                     $.extend(modelItem, response);
-                    modelExpression.assign(scope, getModel());
                     return true;
                   }
                   return false;
                 });
               };
               uploader.onErrorItem = function(item, response, status) {
-                getModel().some(function(modelItem) {
-                  if (modelItem.uploaderFileItem === item) {
-                    if (status === 422 && response && response.error === 'VIRUS_DETECTED') {
-                      scope.fileUploadError = scope.fileUploadError || {};
-                      scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
-                    }
-                    modelExpression.assign(scope, getModel());
-                    return true;
-                  }
-                  return false;
-                });
+
+                scope.fileUploadError = scope.fileUploadError || {};
+                if (status === 422 && response && response.error === 'VIRUS_DETECTED') {
+                  scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
+                } else {
+                  scope.fileUploadError.title = 'Beklager! Vi klarte ikke laste opp filen.';
+                }
+
+                deleteModelItem(item);
+
               };
               uploader.onWhenAddingFileFailed = function(item, error) {
                 scope.fileUploadError = scope.fileUploadError || {};
@@ -442,19 +449,7 @@ angular.module('schemaForm').provider('schemaFormDecorators',
               scope.uploader = uploader;
 
               scope.removeFile = function(modelItem) {
-                var itemIndex;
-                getModel().some(function(item, index) {
-                  if (modelItem === item) {
-                    itemIndex = index;
-                    return true;
-                  }
-                  return false;
-                });
-
-                if (itemIndex >= 0) {
-                  getModel().splice(itemIndex, 1);
-                  modelExpression.assign(scope, getModel());
-                }
+                deleteModelItem(modelItem.uploaderFileItem);
 
                 var idKey = scope.form.deleteConfig.url.match(/\{(.+)\}/)[1];
                 if ((!modelItem.uploaderFileItem || (modelItem.uploaderFileItem.isUploaded && !modelItem.uploaderFileItem.isError)) && idKey && modelItem[idKey]) {
