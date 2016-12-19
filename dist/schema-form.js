@@ -496,9 +496,11 @@ angular.module('schemaForm').provider('schemaFormDecorators',
 
                 scope.fileUploadError = scope.fileUploadError || {};
                 if (status === 422 && response && response.error === 'VIRUS_DETECTED') {
-                  scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil';
+                  scope.fileUploadError.title = 'Filen inneholder skadelig kode, vennligst prøv på nytt med en annen fil.';
+                } else if (status === 410) {
+                  scope.fileUploadError.title = 'Grunnet inaktivitet må fylle ut skjemaet på nytt.';
                 } else {
-                  scope.fileUploadError.title = 'Beklager! Vi klarte ikke laste opp filen.';
+                  scope.fileUploadError.title = 'Beklager, noe gikk galt, vennligst prøv igjen.';
                 }
 
                 deleteModelItem(item);
