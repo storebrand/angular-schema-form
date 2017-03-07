@@ -5,7 +5,7 @@ angular.module('schemaForm').directive('ngModelOnblur', ['formFormatters', '$par
     require: 'ngModel',
     priority: 1, // needed for angular 1.2.x
     link: function(scope, elm, attr, ngModelCtrl) {
-      if (attr.type === 'radio' || attr.type === 'checkbox') return;
+      if (attr.type === 'radio' || attr.type === 'checkbox' || attr.type === 'email') return;
 
       var formatter = formFormatters.getFormatter(scope.$eval(attr.formatterName)) || function (input) {
           return input;
