@@ -1316,6 +1316,19 @@ angular.module('schemaForm').factory('sfValidator', [function() {
   var validator = {};
   var formData = {};
 
+  var mod11 = function (input) {
+    var sum = 0;
+    var i = 0;
+
+    for (var i = 0; i < input.length - 1; i++) {
+      sum += input.charAt(i) * (7 - (i + 2) % 6);
+    }
+
+    var remainder = sum % 11;
+
+    return remainder === 0 ? 0 : 11 - remainder;
+ };
+
   tv4.addFormat({
     'ssn': function (data, schema) {
       var pn;
@@ -1369,7 +1382,22 @@ angular.module('schemaForm').factory('sfValidator', [function() {
     },
     'confirmation': function(data, schema){
       return formData[schema.compareTo] === data ? null : 'wrong confirmation';
-    }
+    },
+    'account-number': function (data) {
+      if (!data) {
+        return 'invalid account number';
+      }
+      var accountNumber = data.toString().replace(/\./g, '');
+      if (accountNumber.length !== 11) {
+          return 'account number must be exactly 11 digits';
+      }
+      
+      if (parseInt(accountNumber.charAt(accountNumber.length - 1), 10) !== mod11(accountNumber)) {
+        return 'incorrect account number';
+      }
+
+      return null;
+    },
   });
 
   /**
